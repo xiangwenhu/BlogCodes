@@ -4,7 +4,7 @@ fileImageCut.addEventListener('change', (ev) => {
     let files = ev.target.files, file;
     //检查图片类型
     if (files.length && (file = files[0])) {
-        if(!checkFile(file)){
+        if (!checkFile(file)) {
             return
         }
         //重置高宽
@@ -32,7 +32,7 @@ function checkFile(file) {
         alert('不是有效的图片')
         return false
     }
-    if(file.size > IMAGE_MAX_SIZE * 1024 * 1024){
+    if (file.size > IMAGE_MAX_SIZE * 1024 * 1024) {
         alert(`上传的图片不允许大于${IMAGE_MAX_SIZE}M`)
         return false
     }
@@ -46,3 +46,37 @@ function resizeImage(img) {
     phc > pwc ? img.height = ph : img.width = pw
 
 }
+
+cutter.addEventListener('dragstart', ev => {   
+    console.log('dragstart')
+    return false
+}, false)
+
+
+cutter.addEventListener('dragenter ', ev => {  
+    console.log('dragenter')
+    return false
+}, false)
+
+
+cutter.addEventListener('dragover', ev => {
+    //ev.stopPropagation()
+    //ev.preventDefault()
+    console.log('dragover')
+    return false
+}, false)
+
+cutter.addEventListener('dragleave', ev => {
+    //ev.stopPropagation()
+    //ev.preventDefault()
+    console.log('dragleave')
+    return false
+}, false)
+
+cutter.addEventListener('drop', ev => {
+    console.log('drop')  
+}, false)
+
+cutter.addEventListener('dragend', ev => {
+    console.log('dragend')
+}, false)

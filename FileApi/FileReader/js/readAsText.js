@@ -1,34 +1,28 @@
 function handleFiles(files) {
     if (files.length) {
-        var file = files[0];
-        var reader = new FileReader();
+        let file = files[0], reader = new FileReader()
         reader.onload = () => {
-            let jp = new JSONParser(reader.result, '#results')
-            jp.init()
+            (new JSONParser(reader.result, '#results')).init()
         }
-        reader.readAsText(file);
+        reader.readAsText(file)
     }
 }
-
 class JSONParser {
     constructor(source, selector) {
         this.source = source
-        this.json = null
-        this.rootElement = document.querySelector(selector)
+        this.selector = selector
         this.results = []
-        this.deep = 0
+        this.deep = 0      
     }
-
     init() {
         try {
-            this.json = JSON.parse(this.source)
+            let json = JSON.parse(this.source)
+            this.format(undefined, json)
+            document.querySelector(this.selector).innerHTML = this.results.join('<br/>')
         } catch (e) {
             alert(e)
         }
-        this.format(undefined, this.json)
-        this.rootElement.innerHTML = this.results.join('<br/>')
     }
-
     format(key = '', value) {
         if (value instanceof Array) {
             this.results.push(this.generateLine(key, '['))
@@ -50,11 +44,9 @@ class JSONParser {
             this.results.push(this.generateLine(key, value))
         }
     }
-
     generateLine(key, value) {
-        let k = key === undefined || key === '' ? '' : `${key}:`
-        let v = value === null ? 'null' : value
-        return '&nbsp'.repeat(this.deep) + `${k}${value}`
+        let k = key === undefined || key === '' ? '' : `${key}:`,
+            v = value === null ? 'null' : value
+        return '&nbsp'.repeat(this.deep) + `${k}${v}`
     }
-
 } 

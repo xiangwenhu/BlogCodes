@@ -4,19 +4,20 @@
     <title>FileReader 之 readAsDataURL</title>
 </head>
 
-<body style="margin: 2em 4em">
+<body style="margin: 2em 4em"  draggable="false">
     <div>图片剪裁</div>
     <input type="file" id="fileImageCut" value="选择图片"><br/>
-    <div  id="container1" style="display: inline-block;width: 500px">
-        <div  draggable="true" style="width: 404px;height: 404px;border:1px solid cornflowerblue;position: relative">
-            <img style="position: absolute;left:-1px;bottom:-1px; border:1px solid greenyellow " id="imgPreview" />
-            <div draggable="true" id="cutter" style="position: absolute;cursor:crosshair;bottom:-2px;left:-2px; width:200px; height: 200px; border: 2px dotted sienna"></div>
+    <div  draggable="false" id="imgWrapper" id="container1" style="display: inline-block;width: 500px">
+        <div style="width: 404px;height: 404px;border:1px solid cornflowerblue;position: relative">
+            <img draggable="false" style="position: absolute;left:-1px;bottom:-1px; border:1px solid greenyellow " id="imgPreview" />
+            <div draggable="true" id="cutter" style="position: absolute;cursor:crosshair;left:-px;bottom:-2px; width:200px; height: 200px; border: 2px dotted sienna"></div>
         </div>
     </div>
-    <div style="display: inline-block;width: 200px;vertical-align:buttom">
-        sad;sl;
+    <div style="display: inline-block;width: 200px;height:200px;vertical-align:buttom;border: 1px solid cadetblue;overflow: hidden">
+        <img  draggable="false" style="width:200px;height:200px;" id="imgResult">
     </div>
+    <!--<div draggable="true" id="cutter" style="position: absolute;cursor:crosshair;left:62px;top:274px; width:200px; height: 200px; border: 2px dotted sienna"></div> -->
 </body>
 <script src="./js/readAsDataURL.js"></script>
 
-</html> 
+</html>

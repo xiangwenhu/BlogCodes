@@ -1,4 +1,5 @@
 const IMAGE_MAX_SIZE = 2
+let iLeft, iRight, iTop, iBottom
 
 fileImageCut.addEventListener('change', (ev) => {
     let files = ev.target.files, file;
@@ -10,12 +11,22 @@ fileImageCut.addEventListener('change', (ev) => {
         //重置高宽
         imgPreview.removeAttribute('height')
         imgPreview.removeAttribute('width')
+        imgPreview.style.width = imgPreview.style.height = null
+        imgPreview.removeAttribute('width')
+        imgResult.style.width = null
+
         let fr = new FileReader()
         fr.onload = () => {
             imgPreview.onload = () => {
                 resizeImage(imgPreview)
+                //计算图片相对浏览器的限值
+                iLeft = imgPreview.getBoundingClientRect().left + document.documentElement.scrollLeft
+                iTop = imgPreview.getBoundingClientRect().top + document.documentElement.scrollTop
+                iRight = iLeft + imgPreview.clientWidth
+                iBottom = iTop + imgPreview.clientHeight
             }
-            imgPreview.src = fr.result
+            imgResult.src = imgPreview.src = fr.result
+
         }
         //如果错误，抛出异常
         fr.onerror = (ev) => {
@@ -47,17 +58,31 @@ function resizeImage(img) {
 
 }
 
-cutter.addEventListener('dragstart', ev => {   
-    console.log('dragstart')
-    return false
-}, false)
-
-
-cutter.addEventListener('dragenter ', ev => {  
+imgPreview.addEventListener('dragenter ', ev => {
     console.log('dragenter')
     return false
 }, false)
 
+
+
+
+
+
+let cLeft, cRight, cTop, cBottom, cOffsetX, cOffsetY, cBorderWidth = Number.parseInt(cutter.style.borderWidth.replace('px', ''))
+
+
+
+
+cutter.addEventListener('dragstart', ev => {
+    cOffsetX = ev.offsetX
+    cOffsetY = ev.offsetY
+    //let dragIcon = document.createElement("img") 
+    //dragIcon.width = cutter.width
+   // dragIcon.height = cutter.height   
+    //ev.dataTransfer.setDragImage(dragIcon, 0, 0);
+    console.log('dragstart')
+    return false
+}, false)
 
 cutter.addEventListener('dragover', ev => {
     //ev.stopPropagation()
@@ -74,9 +99,20 @@ cutter.addEventListener('dragleave', ev => {
 }, false)
 
 cutter.addEventListener('drop', ev => {
-    console.log('drop')  
+    console.log('drop')
 }, false)
 
 cutter.addEventListener('dragend', ev => {
-    console.log('dragend')
+    cLeft = ev.clientX - cOffsetX - cBorderWidth
+    cTop = ev.clientY - cOffsetY - cBorderWidth
+    cRight = cLeft + cutter.clientWidth + cBorderWidth
+    cBottom = cTop + cutter.clientHeight + cBorderWidth
+
+    if (!iTop || cTop < iTop || cLeft < iLeft || cRight > iRight || cBottom > iBottom) {
+        ev.stopPropagation()
+        ev.preventDefault()
+    } else {
+        cutter.style.left = (cLeft - iLeft) + 'px'
+        cutter.style.top = (cTop - iTop) + 'px'
+    }
 }, false)

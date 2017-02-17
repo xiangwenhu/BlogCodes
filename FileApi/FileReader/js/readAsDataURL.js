@@ -12,8 +12,9 @@ fileImageCut.addEventListener('change', (ev) => {
         imgPreview.removeAttribute('height')
         imgPreview.removeAttribute('width')
         imgPreview.style.width = imgPreview.style.height = null
-        imgPreview.removeAttribute('width')
-        imgResult.style.width = null
+        imgResult.removeAttribute('height')
+        imgResult.removeAttribute('width')
+        imgResult.style.width = imgResult.style.height = null
 
         let fr = new FileReader()
         fr.onload = () => {
@@ -24,6 +25,9 @@ fileImageCut.addEventListener('change', (ev) => {
                 iTop = imgPreview.getBoundingClientRect().top + document.documentElement.scrollTop
                 iRight = iLeft + imgPreview.clientWidth
                 iBottom = iTop + imgPreview.clientHeight
+            }
+            imgResult.onload = ()=>{
+                imgResult.width = imgPreview.width * 0.5
             }
             imgResult.src = imgPreview.src = fr.result
 

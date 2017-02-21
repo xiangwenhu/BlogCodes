@@ -1,4 +1,5 @@
 const IMAGE_MAX_SIZE = 2
+const CUTTER_WIDTH = CUTTER_HEIGHT = 300
 let iLeft, iRight, iTop, iBottom
 
 fileImageCut.addEventListener('change', (ev) => {
@@ -12,11 +13,14 @@ fileImageCut.addEventListener('change', (ev) => {
         imgPreview.removeAttribute('height')
         imgPreview.removeAttribute('width')
         imgPreview.style.width = imgPreview.style.height = null
-
+        imgPreview.style.visibility = 'hidden'
         let fr = new FileReader()
         fr.onload = () => {
-            imgPreview.onload = () => {
+            imgPreview.onload = () => {                
                 resizeImage(imgPreview)
+                imgPreview.style.visibility = 'visible'                
+                resizeCutter()
+                resizeResult()
                 //计算图片相对浏览器的限值
                 iLeft = imgPreview.getBoundingClientRect().left + document.documentElement.scrollLeft
                 iTop = imgPreview.getBoundingClientRect().top + document.documentElement.scrollTop
@@ -53,7 +57,16 @@ function resizeImage(img) {
         ph = img.parentElement.clientHeight, pw = img.parentElement.clientWidth,
         phc = h / ph, pwc = w / pw
     phc > pwc ? img.height = ph : img.width = pw
+}
 
+function resizeCutter(){
+    let minValue = Math.min(Math.min(imgPreview.clientHeight,CUTTER_HEIGHT),Math.min(imgPreview.clientWidth,CUTTER_WIDTH))
+    cutter.style.height= cutter.style.width =  minValue + 'px'
+}   
+
+function resizeResult(){    
+    imgResult.style.width = (imgPreview.clientWidth * 0.667).toFixed(2) + 'px'
+    imgResult.style.height = (imgPreview.clientHeight * 0.667).toFixed(2) + 'px'
 }
 
 imgPreview.addEventListener('dragenter ', ev => {

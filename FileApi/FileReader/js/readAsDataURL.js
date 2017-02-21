@@ -62,6 +62,7 @@ function resizeImage(img) {
 function resizeCutter(){
     let minValue = Math.min(Math.min(imgPreview.clientHeight,CUTTER_HEIGHT),Math.min(imgPreview.clientWidth,CUTTER_WIDTH))
     cutter.style.height= cutter.style.width =  minValue + 'px'
+    cutter.style.top = cutter.style.left = null
 }   
 
 function resizeResult(){    

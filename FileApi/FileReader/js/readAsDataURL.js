@@ -83,10 +83,13 @@ let cLeft, cRight, cTop, cBottom, cOffsetX, cOffsetY, cBorderWidth = Number.pars
 cutter.addEventListener('dragstart', ev => {
     cOffsetX = ev.offsetX
     cOffsetY = ev.offsetY
-    //let dragIcon = document.createElement("img") 
-    //dragIcon.width = cutter.width
-    // dragIcon.height = cutter.height   
-    //ev.dataTransfer.setDragImage(dragIcon, 0, 0);
+    /*
+    let dragIcon = document.createElement("img") 
+    dragIcon.src = 'image/drag.jpg'
+    dragIcon.width = cutter.width  
+    document.body.appendChild(dragIcon) 
+    ev.dataTransfer.setDragImage(dragIcon, 0, 0); */
+    //cutter.style.border = "2px red solid"   
     console.log('dragstart')
     return false
 }, false)

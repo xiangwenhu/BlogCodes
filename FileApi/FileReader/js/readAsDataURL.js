@@ -12,9 +12,6 @@ fileImageCut.addEventListener('change', (ev) => {
         imgPreview.removeAttribute('height')
         imgPreview.removeAttribute('width')
         imgPreview.style.width = imgPreview.style.height = null
-        imgResult.removeAttribute('height')
-        imgResult.removeAttribute('width')
-        imgResult.style.width = imgResult.style.height = null
 
         let fr = new FileReader()
         fr.onload = () => {
@@ -25,9 +22,6 @@ fileImageCut.addEventListener('change', (ev) => {
                 iTop = imgPreview.getBoundingClientRect().top + document.documentElement.scrollTop
                 iRight = iLeft + imgPreview.clientWidth
                 iBottom = iTop + imgPreview.clientHeight
-            }
-            imgResult.onload = ()=>{
-                imgResult.width = imgPreview.width * 0.5
             }
             imgResult.src = imgPreview.src = fr.result
 
@@ -70,19 +64,14 @@ imgPreview.addEventListener('dragenter ', ev => {
 
 
 
-
-
 let cLeft, cRight, cTop, cBottom, cOffsetX, cOffsetY, cBorderWidth = Number.parseInt(cutter.style.borderWidth.replace('px', ''))
-
-
-
 
 cutter.addEventListener('dragstart', ev => {
     cOffsetX = ev.offsetX
     cOffsetY = ev.offsetY
     //let dragIcon = document.createElement("img") 
     //dragIcon.width = cutter.width
-   // dragIcon.height = cutter.height   
+    // dragIcon.height = cutter.height   
     //ev.dataTransfer.setDragImage(dragIcon, 0, 0);
     console.log('dragstart')
     return false
@@ -118,5 +107,7 @@ cutter.addEventListener('dragend', ev => {
     } else {
         cutter.style.left = (cLeft - iLeft) + 'px'
         cutter.style.top = (cTop - iTop) + 'px'
+        imgResult.style.left = -((cLeft - iLeft) * (200 / 300)).toFixed(2) + 'px'
+        imgResult.style.top = -((cTop - iTop) * (200 / 300)).toFixed(2) + 'px'
     }
 }, false)

@@ -48,12 +48,9 @@ class SimpleImageCutter {
                         this.iBottom = this.iTop + imgPreview.clientHeight
                     }
                     this.imgResult.src = imgPreview.src = fr.result
-
                 }
                 //如果错误，抛出异常
-                fr.onerror = (ev) => {
-                    alert(ev.target.error)
-                }
+                fr.onerror = ev　=> alert(ev.target.error)                
                 fr.readAsDataURL(file)
             }
         }, false)
@@ -108,7 +105,6 @@ class SimpleImageCutter {
         }, false)
     }
 
-
     checkFile(file) {
         if (!file.type.startsWith("image")) {
             alert('不是有效的图片')
@@ -144,7 +140,6 @@ class SimpleImageCutter {
         this.percentage = this.imgResult.parentElement.clientWidth / this.cutter.clientWidth
     }
 }
-
 
 (new SimpleImageCutter({
     fileUpload: fileImageCut,

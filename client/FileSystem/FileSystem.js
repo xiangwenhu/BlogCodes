@@ -128,7 +128,7 @@ class LocalFileSystem {
     static getInstance(type, size = 1) {
 
         if (this._instance) {
-            return this._instance
+            return Promise.resolve(this._instance)
         }
 
         return new Promise((resolve, reject) => {

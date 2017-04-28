@@ -1,0 +1,22 @@
+{
+  "name": "blogcodes",
+  "version": "1.0.0",
+  "description": "博客园博客相关代码<br/>\r 博客园地址:http://www.cnblogs.com/cloud-/",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xiangwenhu/BlogCodes.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/xiangwenhu/BlogCodes/issues"
+  },
+  "homepage": "https://github.com/xiangwenhu/BlogCodes#readme",
+  "dependencies": {
+    "node-static": "^0.7.9"
+  }
+}

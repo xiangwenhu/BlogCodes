@@ -1,0 +1,57 @@
+<!DOCTYPE>
+<html>
+
+<head>
+    <meta charset="utf-8">
+</head>
+
+<body>
+
+    <div id="container">
+        <input type="file" id="inputFiles" /> <input type="button" value='添加到文件系统' onclick="handleFiles()">
+        <audio id="player" controls loop>
+    </div>
+
+
+    <script src="FileSystem.js"></script>
+    <script>
+        window.URL = window.URL || window.webkitURL;
+
+        function handleFiles() {
+            let files = inputFiles.files
+            if (files.length) {
+                let file = files[0]
+                var reader = new FileReader();
+                reader.onload = e => {
+                    let content = reader.result
+                    addMusicToFileSystem(file.name, content)
+                };
+                reader.readAsArrayBuffer(file);
+            } else {
+                alert('未选择文件')
+            }
+        }
+
+
+        async function addMusicToFileSystem(fileName, content) {
+
+            //获取文件系统的实例
+            let fsInstance = await LocalFileSystem.getInstance(window.TEMPORARY, 100)
+
+            //写入文件
+            fsInstance.writeToFile(fileName, content).then(() => {
+                //读取
+                fsInstance.getFile(fileName).then(f => {
+                    //生成地址并播放
+                    let url = URL.createObjectURL(f)
+                    player.src = url;
+                    player.play();
+
+                })
+            })
+        }
+    </script>
+
+</body>
+
+</html>

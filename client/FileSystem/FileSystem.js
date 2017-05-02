@@ -3,6 +3,9 @@ window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileS
 //根据URL取得文件的读取权限 
 window.resolveLocalFileSystemURL = window.resolveLocalFileSystemURL || window.webkitResolveLocalFileSystemURL
 
+navigator.temporaryStorage = navigator.temporaryStorage || navigator.webkitTemporaryStorage;
+navigator.persistentStorage = navigator.persistentStorage || navigator.webkitPersistentStorage;
+
 /**
  * 转为promise，主要是把 a.b(param1,param2,successCallback,errorCall) 转为promise
  * resolve的时候取值第一个参数，这是局限性，可以修改为 resolve(args)返回参数数组
@@ -27,7 +30,7 @@ function toPromise(obj, ctx, ...args) {
 
             fn.call(ctx, ...args, (...ags) => {
                 //多个也只会取一个
-                resolve(ags[0])
+                resolve(ags.length <= 1 ? ags[0] : ags)
             }, (err) => {
                 reject(err)
             })
@@ -39,8 +42,21 @@ function toPromise(obj, ctx, ...args) {
 class FileStorageQuota {
 
     constructor() {
-        this.storages = navigator.storageQuota.supportedTypes //支持的类型      
-        this.storageQuota = navigator.storageQuota
+
+        this.storageQuota = navigator.storageQuota || {
+            storages: [navigator.webkitTemporaryStorage, navigator.webkitPersistentStorage],
+            queryInfo: function (type) {
+                return toPromise(this.storages[type].queryUsageAndQuota, this.storages[type]).then(arr => {
+                    return { usage: arr[0], quota: arr[1] }
+                })
+            },
+            requestPersistentQuota: function (requestQuota) {
+                return toPromise(this.storages[window.PERSISTENT].requestQuota, this.storages[window.PERSISTENT], requestQuota * 1024 * 1024).then(quota => {
+                    return { quota }
+                })
+            },
+            supportedTypes: [window.TEMPORARY, window.PERSISTENT]
+        }
         this._instance = null //实例
     }
 
@@ -58,8 +74,8 @@ class FileStorageQuota {
     queryUsageAndQuota(type = window.TEMPORARY) {
 
         return new Promise((resolve, reject) => {
-            this.storageQuota.queryInfo(this.storages[type])
-                .then(storageInfo => resolve({ quota: this.tansferBytes(storageInfo.quota), usage: storageInfo.usage }))
+            this.storageQuota.queryInfo(type)
+                .then(storageInfo => resolve({ quota: this.tansferBytes(storageInfo.quota), usage: this.tansferBytes(storageInfo.usage) }))
                 .catch(this.errorHandler(reject))
         })
 
@@ -71,13 +87,13 @@ class FileStorageQuota {
      * @param {* window.TEMPORAR(0) |window.PERSISTENT(1)} type
      * @param {* 请求的配额大小} requestQuota  
      */
-    async requestQuota(type = window.TEMPORARY, requestQuota = 5) {
-        let { quota: quotaM, usage } = await this.queryUsageAndQuota(type)
-        if (requestQuota > quotaM && type == window.PERSISTENT) {
+    async requestQuota(requestQuota = 5) {
+        let { quota: quotaM, usage } = await this.queryUsageAndQuota(window.PERSISTENT)
+        if (requestQuota > quotaM) {
             return new Promise((resolve, reject) =>
                 this.storageQuota.requestPersistentQuota(requestQuota * 1024 * 1024)
                     .then(storageInfo => {
-                        return resolve({ quota: this.tansferBytes(storageInfo.quota), usage: storageInfo.usage })
+                        return resolve({ quota: this.tansferBytes(storageInfo.quota), usage: this.tansferBytes(storageInfo.usage || usage) })
                     })
                     .catch(this.errorHandler(reject)))
         }

@@ -211,7 +211,7 @@ class LocalFileSystem {
      * @param {*文件路径} path 
      */
     async getFile(path) {
-        let fe = await this._getFileEntry(`${this.fsBaseUrl}`)
+        let fe = await this._getFileEntry(path)
         return toPromise(fe.file, fe)
     }
 
@@ -256,15 +256,23 @@ class LocalFileSystem {
         })
     }
 
+    /**
+     * 获取指定目录下的文件和文件夹
+     * @param {*路径} path 
+     */
     async readEntries(path = '') {
-
         let fe = await this._getDirectory(path)
         let reader = fe.createReader()
         return toPromise(reader.readEntries, reader);
     }
 
+    /**
+     * 清除所有的文件
+     */
     async clear() {
-
+        let entries = await this.readEntries()
+        let ps_entries = entries.map(e => e.isFile ? toPromise(e.remove, e) : toPromise(e.removeRecursively, e))
+        return Promise.all(ps_entries)
     }
 
     /**
@@ -278,4 +286,10 @@ class LocalFileSystem {
     }
 
 }
+
+
+// 测试语句
+//读取：LocalFileSystem.getInstance().then(fs=>fs.readEntries()).then(f=>console.log(f))
+//删除所有：LocalFileSystem.getInstance().then(fs=>fs.clear()).then(f=>console.log(f)).catch(err=>console.log(err)) 
+
 

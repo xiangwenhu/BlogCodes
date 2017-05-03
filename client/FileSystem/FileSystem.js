@@ -4,7 +4,9 @@
  * 
  */
 
-
+if (!window.location.origin) {
+    window.location.origin = window.location.protocol + "//" + window.location.hostname + (window.location.port ? ':' + window.location.port : '');
+}
 //文件系统请求标识 
 window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem
 //根据URL取得文件的读取权限 
@@ -15,7 +17,9 @@ navigator.temporaryStorage = navigator.temporaryStorage || navigator.webkitTempo
 navigator.persistentStorage = navigator.persistentStorage || navigator.webkitPersistentStorage;
 
 //常量
-const _TEMPORARY = 'temporary', _PERSISTENT = 'persistent'
+const _TEMPORARY = 'temporary',
+    _PERSISTENT = 'persistent',
+    FS_SCHEME = 'filesystem:'
 
 /**
  * 转为promise，主要是把 a.b(param1,param2,successCallback,errorCall) 转为promise
@@ -23,7 +27,7 @@ const _TEMPORARY = 'temporary', _PERSISTENT = 'persistent'
  * @param {*上下文} ctx 
  * @param {*参数} args 
  */
-function toPromise(obj, ctx, ...args) {
+function toPromise(obj, ctx = window, ...args) {
     if (!obj) return obj
 
     //如果已经是Promise对象
@@ -36,11 +40,11 @@ function toPromise(obj, ctx, ...args) {
 
     //函数转成 promise
     function _toPromise(fn) {
-        return new Promise(function (resolve, reject) {
+        return new Promise((resolve, reject) => {
 
             fn.call(ctx, ...args, (...ags) => {
                 //多个参数返回数组，单个直接返回对象
-                resolve(args && ags.length > 1 ? ags : ags[0])
+                resolve(ags && ags.length > 1 ? ags : ags[0])
             }, (err) => {
                 reject(err)
             })
@@ -48,7 +52,6 @@ function toPromise(obj, ctx, ...args) {
         })
     }
 }
-
 
 
 /**
@@ -140,7 +143,7 @@ class FileStorageQuota {
      * @param {*}  reject
      */
     errorHandler(reject) {
-        return (error) => {
+        return error => {
             reject(error)
         }
     }
@@ -153,6 +156,8 @@ class LocalFileSystem {
         this._fs = fs
         this._root = fs.root
         this._instance = null
+        this._type = null
+        this._fsBaseUrl = null
     }
 
 
@@ -161,15 +166,20 @@ class LocalFileSystem {
        * @param {* window.TEMPORAR(0) |window.PERSISTENT(1)} type
        * @param {* 申请空间大小，单位为M } size
        */
-    static getInstance(type, size = 1) {
+    static getInstance(type = window.TEMPORARY, size = 1) {
 
         if (this._instance) {
             return Promise.resolve(this._instance)
         }
-
+        //类型
+        let typeValue = type,
+            //文件系统基础地址
+            fsBaseUrl = FS_SCHEME + location.origin + '/' + (type == 1 ? _PERSISTENT : _TEMPORARY) + '/'
         return new Promise((resolve, reject) => {
             window.requestFileSystem(type, size * 1024 * 1024, fs => {
                 this._instance = new LocalFileSystem(fs)
+                this._instance._type = typeValue;
+                this._instance._fsBaseUrl = fsBaseUrl
                 return resolve(this._instance)
             }, (err) => reject(err))
         })
@@ -184,12 +194,24 @@ class LocalFileSystem {
         return toPromise(this._root.getFile, this._root, path, { create: true, exclusive: false })
     }
 
+    _getDirectory(path = '') {
+        return toPromise(this._root.getDirectory, this._root, path, { create: false })
+    }
+
+    /**
+     * 获得Entry
+     * @param {*路径} path 
+     */
+    _getEntry(path) {
+        return toPromise(window.resolveLocalFileSystemURL, window, `${this._fsBaseUrl}${path.startsWith('\/') ? path.substr(1) : path}`)
+    }
+
     /**
      * 获得文件
      * @param {*文件路径} path 
      */
     async getFile(path) {
-        let fe = await this._getFileEntry(path)
+        let fe = await this._getFileEntry(`${this.fsBaseUrl}`)
         return toPromise(fe.file, fe)
     }
 
@@ -234,10 +256,21 @@ class LocalFileSystem {
         })
     }
 
+    async readEntries(path = '') {
+
+        let fe = await this._getDirectory(path)
+        let reader = fe.createReader()
+        return toPromise(reader.readEntries, reader);
+    }
+
+    async clear() {
+
+    }
+
     /**
-   * Promise里面的错误处理
-   * @param {*reject}  
-   */
+    * Promise里面的错误处理
+    * @param {*reject}  
+    */
     errorHandler(reject) {
         return (error) => {
             reject(error)

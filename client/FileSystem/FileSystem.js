@@ -44,13 +44,35 @@ function toPromise(obj, ctx = window, ...args) {
 
             fn.call(ctx, ...args, (...ags) => {
                 //多个参数返回数组，单个直接返回对象
-                resolve(ags && ags.length > 1 ? ags : ags[0])
+                resolve(ags && ags.length > 1 ? ags : ags[0] || null)
             }, (err) => {
                 reject(err)
             })
 
         })
     }
+}
+
+/**
+ * https://segmentfault.com/q/1010000007499416
+ * Promise for forEach
+ * @param {*数组} arr 
+ * @param {*回调} cb(val)返回的应该是Promise 
+ * @param {*是否需要执行结果集} needResults
+ */
+function promiseForEach(arr, cb, needResults) {
+    let realResult = [], lastResult //此参数暂无用
+    let result = Promise.resolve()
+    Array.from(arr).forEach((val, index) => {
+        result = result.then(() => {
+            return cb(val, index).then((res) => {
+                lastResult = res
+                needResults && realResult.push(res)
+            })
+        })
+    })
+
+    return needResults ? result.then(() => realResult) : result
 }
 
 
@@ -190,19 +212,32 @@ class LocalFileSystem {
      * 获得FileEntry
      * @param {*文件路径} path  
      */
-    _getFileEntry(path) {
-        return toPromise(this._root.getFile, this._root, path, { create: true, exclusive: false })
+    _getFileEntry(path, create = false) {
+        return toPromise(this._root.getFile, this._root, path, { create, exclusive: false })
     }
 
-    _getDirectory(path = '') {
-        return toPromise(this._root.getDirectory, this._root, path, { create: false })
+    _getDirectory(path = '', create) {
+        return toPromise(this._root.getDirectory, this._root, path, { create })
+    }
+
+    async _readEntriesRecursively(rootEntry, refResults) {
+
+        if (rootEntry.isFile) {
+            refResults.push(rootEntry)
+            return Promise.resolve(rootEntry)
+        }
+        let reader = rootEntry.createReader()
+        let entries = await toPromise(reader.readEntries, reader)
+        refResults.push(...entries)
+        let psEntries = entries.map(entry => this._readEntriesRecursively(entry, refResults))
+        return Promise.all(psEntries)
     }
 
     /**
      * 获得Entry
      * @param {*路径} path 
      */
-    _getEntry(path) {
+    resolveLocalFileSystemURL(path) {
         return toPromise(window.resolveLocalFileSystemURL, window, `${this._fsBaseUrl}${path.startsWith('\/') ? path.substr(1) : path}`)
     }
 
@@ -224,7 +259,7 @@ class LocalFileSystem {
      */
     async writeToFile(path, content, type = 'text/plain', append = false) {
 
-        let fe = await this._getFileEntry(path)
+        let fe = await this._getFileEntry(path, true)
         let writer = await toPromise(fe.createWriter, fe);
         let data = content;
 
@@ -261,10 +296,39 @@ class LocalFileSystem {
      * @param {*路径} path 
      */
     async readEntries(path = '') {
-        let fe = await this._getDirectory(path)
-        let reader = fe.createReader()
+        let reader = this._root.createReader()
         return toPromise(reader.readEntries, reader);
     }
+
+
+    /**
+     * 
+     * @param {*} directory 
+     */
+    async ensureDirectory(directory = '') {
+        //过滤空的目录，比如 '/music/' => ['','music','']
+        let _dirs = directory.split('/').filter(v => !!v)
+
+        if (!_dirs || _dirs.length == 0) {
+            return Promise.resolve(true)
+        }
+
+        return promiseForEach(_dirs, (dir, index) => {
+            return this._getDirectory(_dirs.slice(0, index + 1).join('/'), true)
+        }, true).then((rs) => {
+            console.log(rs)
+            return true
+        })
+    }
+
+    async listAll() {
+        let refResults = []
+        let entries = await this._readEntriesRecursively(this._root, refResults)
+        refResults.sort((a, b) => a.fullPath > b.fullPath)
+        return refResults
+
+    }
+
 
     /**
      * 清除所有的文件
@@ -289,7 +353,10 @@ class LocalFileSystem {
 
 
 // 测试语句
-//读取：LocalFileSystem.getInstance().then(fs=>fs.readEntries()).then(f=>console.log(f))
-//删除所有：LocalFileSystem.getInstance().then(fs=>fs.clear()).then(f=>console.log(f)).catch(err=>console.log(err)) 
+//读取：         LocalFileSystem.getInstance().then(fs=>fs.readEntries()).then(f=>console.log(f))
+//删除所有：     LocalFileSystem.getInstance().then(fs=>fs.clear()).then(f=>console.log(f)).catch(err=>console.log(err)) 
+//递归创建目录：  LocalFileSystem.getInstance().then(fs=>fs.ensureDirectory('music/vbox')).then(r=>console.log('r:' + r))
+//递归获取：     LocalFileSystem.getInstance().then(fs=>fs.listAll()).then(f=>console.log(f))
+
 
 

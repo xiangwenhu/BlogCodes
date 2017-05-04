@@ -61,7 +61,7 @@ function toPromise(obj, ctx = window, ...args) {
  * @param {*是否需要执行结果集} needResults
  */
 function promiseForEach(arr, cb, needResults) {
-    let realResult = [], lastResult //此参数暂无用
+    let realResult = [], lastResult //lastResult参数暂无用
     let result = Promise.resolve()
     Array.from(arr).forEach((val, index) => {
         result = result.then(() => {
@@ -175,11 +175,11 @@ class FileStorageQuota {
 class LocalFileSystem {
 
     constructor(fs) {
-        this._fs = fs
-        this._root = fs.root
-        this._instance = null
-        this._type = null
-        this._fsBaseUrl = null
+        this._fs = fs       //文件系统
+        this._root = fs.root //文件系统的根Entry
+        this._instance = null //示例对象
+        this._type = null //类型，window.TEMPORAR| window.PERSISTENT
+        this._fsBaseUrl = null //文件系统的基础地址
     }
 
 
@@ -216,10 +216,20 @@ class LocalFileSystem {
         return toPromise(this._root.getFile, this._root, path, { create, exclusive: false })
     }
 
-    _getDirectory(path = '', create) {
-        return toPromise(this._root.getDirectory, this._root, path, { create })
+    /**
+     * 获取目录
+     * @param {*路径} path 
+     * @param {*不存在的时候是否创建} create 
+     */
+    _getDirectory(path = '', create = false) {
+        return toPromise(this._root.getDirectory, this._root, path, { create, exclusive: false })
     }
 
+    /**
+     * 递归查询目录和文件
+     * @param {*根Entry} rootEntry 
+     * @param {*保存结果的数组} refResults 
+     */
     async _readEntriesRecursively(rootEntry, refResults) {
 
         if (rootEntry.isFile) {
@@ -296,13 +306,30 @@ class LocalFileSystem {
      * @param {*路径} path 
      */
     async readEntries(path = '') {
-        let reader = this._root.createReader()
+        let entry = null
+        if (!path) {
+            entry = this._root
+        } else {
+            entry = await this.resolveLocalFileSystemURL(path)
+        }
+        let reader = entry.createReader()
         return toPromise(reader.readEntries, reader);
+    }
+
+    /**
+     * 获取所有的文件和文件夹，按照路径排序
+     */
+    async readAllEntries() {
+        let refResults = []
+        let entries = await this._readEntriesRecursively(this._root, refResults)
+        refResults.sort((a, b) => a.fullPath > b.fullPath)
+        return refResults
+
     }
 
 
     /**
-     * 
+     * 确认目录存在，递归检查，没有会自动创建
      * @param {*} directory 
      */
     async ensureDirectory(directory = '') {
@@ -321,17 +348,10 @@ class LocalFileSystem {
         })
     }
 
-    async listAll() {
-        let refResults = []
-        let entries = await this._readEntriesRecursively(this._root, refResults)
-        refResults.sort((a, b) => a.fullPath > b.fullPath)
-        return refResults
-
-    }
 
 
     /**
-     * 清除所有的文件
+     * 清除所有的文件和文件夹
      */
     async clear() {
         let entries = await this.readEntries()
@@ -353,10 +373,12 @@ class LocalFileSystem {
 
 
 // 测试语句
-//读取：         LocalFileSystem.getInstance().then(fs=>fs.readEntries()).then(f=>console.log(f))
-//删除所有：     LocalFileSystem.getInstance().then(fs=>fs.clear()).then(f=>console.log(f)).catch(err=>console.log(err)) 
+//读取某个目录的子目录和文件：  LocalFileSystem.getInstance().then(fs=>fs.readEntries()).then(f=>console.log(f))
+//写文件         LocalFileSystem.getInstance().then(fs=>fs.writeToFile('music/txt.txt','爱死你')).then(f=>console.log(f))
+//获取文件：     LocalFileSystem.getInstance().then(fs=>fs.getFile('music/txt.txt')).then(f=>console.log(f))
 //递归创建目录：  LocalFileSystem.getInstance().then(fs=>fs.ensureDirectory('music/vbox')).then(r=>console.log('r:' + r))
-//递归获取：     LocalFileSystem.getInstance().then(fs=>fs.listAll()).then(f=>console.log(f))
+//递归获取：     LocalFileSystem.getInstance().then(fs=>fs.readAllEntries()).then(f=>console.log(f))
+//删除所有：     LocalFileSystem.getInstance().then(fs=>fs.clear()).then(f=>console.log(f)).catch(err=>console.log(err)) 
 
 
 

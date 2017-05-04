@@ -232,8 +232,7 @@ class LocalFileSystem {
      */
     async _readEntriesRecursively(rootEntry, refResults) {
 
-        if (rootEntry.isFile) {
-            refResults.push(rootEntry)
+        if (rootEntry.isFile) {         
             return Promise.resolve(rootEntry)
         }
         let reader = rootEntry.createReader()

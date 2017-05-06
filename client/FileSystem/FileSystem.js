@@ -232,7 +232,7 @@ class LocalFileSystem {
      */
     async _readEntriesRecursively(rootEntry, refResults) {
 
-        if (rootEntry.isFile) {         
+        if (rootEntry.isFile) {
             return Promise.resolve(rootEntry)
         }
         let reader = rootEntry.createReader()
@@ -247,7 +247,11 @@ class LocalFileSystem {
      * @param {*路径} path 
      */
     resolveLocalFileSystemURL(path) {
-        return toPromise(window.resolveLocalFileSystemURL, window, `${this._fsBaseUrl}${path.startsWith('\/') ? path.substr(1) : path}`)
+        return new Promise((resolve) => {
+            toPromise(window.resolveLocalFileSystemURL, window, `${this._fsBaseUrl}${path.startsWith('\/') ? path.substr(1) : path}`).then(entry => resolve(entry)).catch(() => {
+                resolve(null)
+            })
+        })
     }
 
     /**
@@ -267,6 +271,17 @@ class LocalFileSystem {
      * @param {*是否是append} append 
      */
     async writeToFile(path, content, type = 'text/plain', append = false) {
+
+
+        if (!path) {
+            Promise.reject(new Error(`path参数为空`))
+        }
+
+        let dir = path.substring(0, path.lastIndexOf('/'))
+        let dirEntry = await this.resolveLocalFileSystemURL(dir)
+        if (!dirEntry) {
+            dirEntry = await this.ensureDirectory(dir)
+        }
 
         let fe = await this._getFileEntry(path, true)
         let writer = await toPromise(fe.createWriter, fe);
@@ -288,7 +303,7 @@ class LocalFileSystem {
         return new Promise((resolve, reject) => {
             //写入成功
             writer.onwriteend = () => {
-                resolve(true)
+                resolve(fe)
             }
 
             //写入失败
@@ -329,6 +344,7 @@ class LocalFileSystem {
 
     /**
      * 确认目录存在，递归检查，没有会自动创建
+     * 
      * @param {*} directory 
      */
     async ensureDirectory(directory = '') {
@@ -341,9 +357,8 @@ class LocalFileSystem {
 
         return promiseForEach(_dirs, (dir, index) => {
             return this._getDirectory(_dirs.slice(0, index + 1).join('/'), true)
-        }, true).then((rs) => {
-            console.log(rs)
-            return true
+        }, true).then((dirEntes) => {
+            return dirEntes && dirEntes[dirEntes.length - 1]
         })
     }
 
@@ -375,7 +390,7 @@ class LocalFileSystem {
 //读取某个目录的子目录和文件：  LocalFileSystem.getInstance().then(fs=>fs.readEntries()).then(f=>console.log(f))
 //写文件         LocalFileSystem.getInstance().then(fs=>fs.writeToFile('music/txt.txt','爱死你')).then(f=>console.log(f))
 //获取文件：     LocalFileSystem.getInstance().then(fs=>fs.getFile('music/txt.txt')).then(f=>console.log(f))
-//递归创建目录：  LocalFileSystem.getInstance().then(fs=>fs.ensureDirectory('music/vbox')).then(r=>console.log('r:' + r))
+//递归创建目录：  LocalFileSystem.getInstance().then(fs=>fs.ensureDirectory('music/vbox')).then(r=>console.log( r))
 //递归获取：     LocalFileSystem.getInstance().then(fs=>fs.readAllEntries()).then(f=>console.log(f))
 //删除所有：     LocalFileSystem.getInstance().then(fs=>fs.clear()).then(f=>console.log(f)).catch(err=>console.log(err)) 
 

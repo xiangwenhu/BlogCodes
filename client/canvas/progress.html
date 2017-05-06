@@ -9,71 +9,22 @@
 
 <body style="margin:5% 10% 0 10%">
     <div>
-        <canvas id="cvProgress" height="156" width="90">
+        <canvas id="cvProgress" height="100" width="15">
     </div>
+    <script src="CanvasProgress.js"></script>
 </body>
 <script>
-    let edgeWidth = 20,
-        diameter = getDiameter(cvProgress),
-        r = Math.ceil(diameter / 2),
-        circleParams = {
-            x: r,//圆心的x轴坐标值
-            y: r,//圆心的y轴坐标值
-            r: Math.floor(r - edgeWidth / 2 - 1) //圆的半径
-        }, progress = 0;
-
-    cvProgress.width = cvProgress.height = diameter
-    if (cvProgress.getContext) {
-        let ctx = cvProgress.getContext('2d')
-        // 开始一个新的绘制路径
-        ctx.beginPath();
-        //设置弧线的颜色为蓝色
-        ctx.strokeStyle = "#123456";
-        ctx.lineWidth = edgeWidth ;
-        //以canvas中的坐标点(100,100)为圆心，绘制一个半径为50px的圆形
-        ctx.arc(circleParams.x, circleParams.y, circleParams.r, 0, Math.PI * 2, false);
-        //按照指定的路径绘制弧线
-        ctx.stroke();
-
-
-        var gradient = ctx.createLinearGradient(0, 0, 100, 0);
-        gradient.addColorStop("0", "magenta");
-        gradient.addColorStop("0.5", "blue");
-        gradient.addColorStop("1.0", "red");
-
-
-        let tickets = setInterval(function () {
-            drawRoundEdge(ctx, circleParams, 'green', progress)
-            ctx.clearRect(r * 0.5, r * 0.5, r, r)
-            ctx.fillStyle = gradient;
-            ctx.fillText(progress + '%', circleParams.x - 8, circleParams.y + 4, 100)
-            progress += 5
-            if (progress > 100) {
-                clearInterval(tickets)
-            }
-        }, 100)
-    }
-
-
-    function drawRoundEdge(ctx, circle, color = 'white', progress) {
-        if (progress <= 0) {
-            return
+    let ps = new CanvasProgress(cvProgress, {
+        edgeWidth: 50       
+    }), progress = 0
+    let tickets = setInterval(function () {
+        progress += 5
+        ps.updateProgress(progress,null,{               
+        })
+        if (progress > 100) {
+            clearInterval(tickets)
         }
-        ctx.beginPath();
-        let angle = getAngle(progress)
-        ctx.strokeStyle = color;
-        ctx.lineWidth = edgeWidth;
-        ctx.arc(circle.x, circle.y, circle.r, 0, angle, false)
-        ctx.stroke()
-    }
-
-    function getAngle(progress) {
-        return (progress / 100) * Math.PI * 2
-    }
-
-    function getDiameter(canvas) {
-        return Math.max(canvas.height || 0, canvas.width || 0) || 200
-    }
+    }, 100)
 
 </script>
 

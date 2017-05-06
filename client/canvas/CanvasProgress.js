@@ -58,7 +58,7 @@ class CanvasProgress {
         // 开始一个新的绘制路径
         ctx.beginPath()
         //设置弧线的颜色为蓝色
-        ctx.strokeStyle = "#123456"
+        ctx.strokeStyle = this._options.bgColor
         ctx.lineWidth = this._options.edgeWidth
         //以canvas中的坐标点(100,100)为圆心，绘制一个半径为50px的圆形
         ctx.arc(this._circleParams.x, this._circleParams.y, this._circleParams.r, 0, Math.PI * 2, false)
@@ -94,8 +94,8 @@ class CanvasProgress {
         ctx.lineWidth = this._options.edgeWidth
 
         if (settings) {
-            Object.keys(settings).forEach((v, k) => {
-                ctx[k] = v
+            Object.keys(settings).forEach(k => {
+                ctx[k] = settings[k]
             })
         }
 
@@ -121,8 +121,8 @@ class CanvasProgress {
         ctx.font = `${fontSize}px sans-serif`
         ctx.fillStyle = this._getTextGradient()
         if (settings) {
-            Object.keys(settings).forEach((v, k) => {
-                ctx[k] = v
+            Object.keys(settings).forEach(k => {
+                ctx[k] = settings[k]
             })
         }
 

@@ -9,17 +9,19 @@
 
 <body style="margin:5% 10% 0 10%">
     <div>
-        <canvas id="cvProgress" height="400" width="15">
+        <canvas id="cvProgress" height="250" width="15">
     </div>
     <script src="CanvasProgress.js"></script>
 </body>
 <script>
     let ps = new CanvasProgress(cvProgress, {
-        edgeWidth: 50       
+        edgeWidth: 50,
+        bgColor:'#654321'     
     }), progress = 0
     let tickets = setInterval(function () {
         progress += 5
-        ps.updateProgress(progress,null,{               
+        ps.updateProgress(progress,null,{  
+                         
         })
         if (progress > 100) {
             clearInterval(tickets)

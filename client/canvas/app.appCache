@@ -1,0 +1,18 @@
+CACHE MANIFEST
+#version 17.05.09.005
+http://www.xuanfengge.com/demo/201506/charm-applicationCache/js/wScratch.js
+http://www.xuanfengge.com/demo/201506/charm-applicationCache/js/islider.js
+http://www.xuanfengge.com/demo/201506/charm-applicationCache/js/zepto.cookie.min.js
+http://www.xuanfengge.com/demo/201506/charm-applicationCache/js/index.js
+http://www.xuanfengge.com/demo/201506/charm-applicationCache/js/jquery-2.0.3.js
+http://www.xuanfengge.com/demo/201506/charm-applicationCache/js/islider_plugin.js
+http://www.xuanfengge.com/demo/201506/charm-applicationCache/js/zepto.min.js
+/canvas/app.js?v=005
+/canvas/CanvasProgress.js
+ 
+# Use from network if available
+NETWORK:
+*
+ 
+# Fallback content
+FALLBACK:

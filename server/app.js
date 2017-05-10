@@ -5,7 +5,9 @@ const path = require('path')
 // 
 // Create a node-static server instance to serve the './public' folder 
 // 
-var file = new static.Server( path.join(__dirname, '../client'));
+var file = new static.Server( path.join(__dirname, '../client'),{
+    cache:0
+});
 
 require('http').createServer(function (request, response) {
     request.addListener('end', function () {

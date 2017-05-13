@@ -12,11 +12,18 @@ this.addEventListener('install', function (event) {
         '/sw-test/myLittleVader.jpg',
         '/sw-test/snowTroopers.jpg'
       ]);
+    }).then(function () {
+      // `skipWaiting()` forces the waiting ServiceWorker to become the
+      // active ServiceWorker, triggering the `onactivate` event.
+      // Together with `Clients.claim()` this allows a worker to take effect
+      // immediately in the client(s).
+      return self.skipWaiting();
     })
-  );
+  )
 });
 
 this.addEventListener('fetch', function (event) {
+
   var response;
   event.respondWith(caches.match(event.request)
     .then(r => {
@@ -31,9 +38,28 @@ this.addEventListener('fetch', function (event) {
         });
         return response.clone();
       } else {
-        return response
+        return response;
       }
     }).catch(function () {
       return caches.match('/sw-test/gallery/myLittleVader.jpg');
     }));
+});
+
+
+this.addEventListener('message', function (event) {
+  console.log('sw:' + event.data);
+
+  caches.open('v1').then(function (cache) {
+    cache.keys().then(keys => {
+      event.ports[0].postMessage(keys.map(k => k.url))
+    });
+
+  })
+  console.log('yy-11-22-33-44-55-66-77')
+
+})
+
+
+self.addEventListener('activate', function (event) {
+  event.waitUntil(self.clients.claim());
 });

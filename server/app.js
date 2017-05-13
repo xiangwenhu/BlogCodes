@@ -9,14 +9,6 @@ const app = new Koa()
 //better body
 app.use(betterBody())
 
-// 
-// Create a node-static server instance to serve the './public' folder 
-// 
-var file = new static.Server( path.join(__dirname, '../client'),{
-    cache:0
-});
-
-
 //静态服务器资源
 app.use(koaStatic(path.resolve(__dirname, '../client')))
 

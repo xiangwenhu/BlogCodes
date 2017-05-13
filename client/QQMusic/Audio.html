@@ -1,0 +1,60 @@
+<!DOCTYPE>
+<html>
+
+<head>
+    <title>Audio API</title>
+</head>
+
+<body style="margin:5% 15%">
+
+    <div>
+        <p>mid:<input id='songmid' value="004Dbsoo1yCbNZ" /><input type="button" id='btnPlay' value='播放'></p> 
+
+        <p></p>
+
+        <audio id='player' controls></audio>
+    </div>
+
+    <script>
+
+        
+
+        btnPlay.addEventListener('click',()=>{
+            let mid = songmid.value,
+                fileName = `C400${mid}.m4a`
+               
+            request(getVkeyUrl(mid)).then(r=>r.json())
+            .then(kv=>{
+                if(kv && kv.data && kv.data.items && kv.data.items.length > 0){
+                    let kInfo = kv.data.items[0],
+                    filename = kInfo.filename,
+                    vkey = kInfo.vkey;
+                    player.src = `/api/common/media?url=${encodeURIComponent(getMediaUrl(filename,vkey))}`
+                    player.play()
+
+                }
+            })
+        })
+
+
+        function request(url,options = {}){
+            let realUrl = `/api/common/get?url=${encodeURIComponent(url)}`
+            return fetch(realUrl,options)
+        }
+
+        function getVkeyUrl(mid){
+            return 'https://c.y.qq.com/base/fcgi-bin/fcg_music_express_mobile3.fcg?' + 
+             'g_tk=5381&loginUin=0&hostUin=0&format=json&inCharset=utf8&outCharset=utf-8' + 
+             '&notice=0&platform=yqq&needNewCode=0&cid=205361747&uin=0' + 
+             `&songmid=${mid}` + 
+             `&filename=C400${mid}.m4a&guid=488797456`;
+        }
+
+        function getMediaUrl(fileName,vkey){
+            return `http://dl.stream.qqmusic.qq.com/${fileName}?vkey=${vkey}&guid=488797456&uin=0&fromtag=66`
+        }
+
+    </script>
+</body>
+
+</html>

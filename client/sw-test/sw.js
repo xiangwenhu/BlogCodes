@@ -18,7 +18,7 @@ this.addEventListener('install', function (event) {
       // Together with `Clients.claim()` this allows a worker to take effect
       // immediately in the client(s).
       return self.skipWaiting();
-    })
+    }).catch(err => console.log(err))
   )
 });
 
@@ -27,21 +27,18 @@ this.addEventListener('fetch', function (event) {
   var response;
   event.respondWith(caches.match(event.request)
     .then(r => {
-      return { response: r, cached: true }
+      if (r) {
+        return { response: r, cached: true }
+      } else {
+        throw new Error('404')
+      }
     }).catch(function () {
       return fetch(event.request).then(r => { return { response: r, cached: false } })
     }).then(function (r) {
       let { response, cached } = r
-      if (!cached) {
-        caches.open('v1').then(function (cache) {
-          cache.put(event.request, response);
-        });
-        return response.clone();
-      } else {
-        return response;
-      }
+      return response
     }).catch(function () {
-      return caches.match('/sw-test/gallery/myLittleVader.jpg');
+      //return caches.match('/sw-test/gallery/myLittleVader.jpg');
     }));
 });
 
@@ -63,3 +60,4 @@ this.addEventListener('message', function (event) {
 self.addEventListener('activate', function (event) {
   event.waitUntil(self.clients.claim());
 });
+

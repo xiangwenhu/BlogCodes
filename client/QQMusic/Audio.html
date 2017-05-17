@@ -8,52 +8,75 @@
 <body style="margin:5% 15%">
 
     <div>
-        <p>mid:<input id='songmid' value="004Dbsoo1yCbNZ" /><input type="button" id='btnPlay' value='播放'></p> 
+        <p>mid:<input id='songmid' value="004Dbsoo1yCbNZ" /><input type="button" id='btnPlay' value='播放'></p>
 
         <p></p>
 
-        <audio id='player' controls></audio>
+        <audio id='player' controls="controls" loop="loop"></audio>
     </div>
 
     <script>
-
-        
-
-        btnPlay.addEventListener('click',()=>{
+        btnPlay.addEventListener('click', () => {
             let mid = songmid.value,
                 fileName = `C400${mid}.m4a`
-               
-            request(getVkeyUrl(mid)).then(r=>r.json())
-            .then(kv=>{
-                if(kv && kv.data && kv.data.items && kv.data.items.length > 0){
-                    let kInfo = kv.data.items[0],
-                    filename = kInfo.filename,
-                    vkey = kInfo.vkey;
-                    player.src = `/api/common/media?url=${encodeURIComponent(getMediaUrl(filename,vkey))}`
-                    player.play()
 
-                }
-            })
+            request(getVkeyUrl(mid)).then(r => r.json())
+                .then(kv => {
+                    if (kv && kv.data && kv.data.items && kv.data.items.length > 0) {
+                        let kInfo = kv.data.items[0],
+                            filename = kInfo.filename,
+                            vkey = kInfo.vkey;
+                        player.src = `/api/common/media?url=${encodeURIComponent(getMediaUrl(filename, vkey))}`
+                        player.play()
+
+                    }
+                })
         })
 
+        player.onended = function () {
+            player.play()
+        }
 
-        function request(url,options = {}){
+        player.onprogress = function (ev) {
+            console.log(ev)
+        }
+
+        function request(url, options = {}) {
             let realUrl = `/api/common/get?url=${encodeURIComponent(url)}`
-            return fetch(realUrl,options)
+            return fetch(realUrl, options)
         }
 
-        function getVkeyUrl(mid){
-            return 'https://c.y.qq.com/base/fcgi-bin/fcg_music_express_mobile3.fcg?' + 
-             'g_tk=5381&loginUin=0&hostUin=0&format=json&inCharset=utf8&outCharset=utf-8' + 
-             '&notice=0&platform=yqq&needNewCode=0&cid=205361747&uin=0' + 
-             `&songmid=${mid}` + 
-             `&filename=C400${mid}.m4a&guid=488797456`;
+        function getVkeyUrl(mid) {
+            return 'https://c.y.qq.com/base/fcgi-bin/fcg_music_express_mobile3.fcg?' +
+                'g_tk=5381&loginUin=0&hostUin=0&format=json&inCharset=utf8&outCharset=utf-8' +
+                '&notice=0&platform=yqq&needNewCode=0&cid=205361747&uin=0' +
+                `&songmid=${mid}` +
+                `&filename=C400${mid}.m4a&guid=488797456`;
         }
 
-        function getMediaUrl(fileName,vkey){
+        function getMediaUrl(fileName, vkey) {
             return `http://dl.stream.qqmusic.qq.com/${fileName}?vkey=${vkey}&guid=488797456&uin=0&fromtag=66`
         }
 
+
+        var objectUrl;
+        var url = 'http://localhost:8085/api/common/media?url=http%3A%2F%2Fdl.stream.qqmusic.qq.com%2FC400004Dbsoo1yCbNZ.m4a%3Fvkey%3DE04DF0B929C8923145FB8D6833735A5D523E3D4F8FF34150BBDCCB780D548E7C86893F86CA5A2530EEC06BD1239C10EED80603DC1085E9B9%26guid%3D488797456%26uin%3D0%26fromtag%3D66',
+            xhr = new XMLHttpRequest();
+
+        xhr.open("get", url, true);
+        xhr.responseType = "blob";
+        xhr.onload = function () {
+            var res = xhr.response;            
+            player.src = window.URL.createObjectURL(res)
+            layer.play()
+           //window.URL.revokeObjectURL(player.src)
+           setTimeout(function(){
+               //window.URL.revokeObjectURL(player.src)
+           },5)
+        };
+
+
+        xhr.send();
     </script>
 </body>
 

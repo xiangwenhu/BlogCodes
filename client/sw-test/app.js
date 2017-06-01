@@ -16,7 +16,7 @@ navigator.serviceWorker.getRegistration('/sw-test/').then(function(reg) {
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw-test/sw.js', { scope: '/sw-test/' }).then(function (reg) {
-
+  
     if (reg.installing) {
       console.log('Service worker installing');
     } else if (reg.waiting) {
@@ -63,6 +63,7 @@ function imgLoad(imgJSON) {
 var imgSection = document.querySelector('section');
 
 window.onload = function () {
+  console.log('onload...')
 
   // load each set of image, alt text, name and caption
   for (var i = 0; i <= Gallery.images.length - 1; i++) {
@@ -111,8 +112,9 @@ function sendMessage(message) {
     // The service worker can then use the transferred port to reply via postMessage(), which
     // will in turn trigger the onmessage handler on messageChannel.port1.
     // See https://html.spec.whatwg.org/multipage/workers.html#dom-worker-postmessage
-    navigator.serviceWorker.controller.postMessage(message,
-      [messageChannel.port2]);
+    if( navigator.serviceWorker.controller){
+      navigator.serviceWorker.controller.postMessage(message,  [messageChannel.port2]);
+    }
   });
 }
 

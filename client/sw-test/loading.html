@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+  <meta name="viewport" content="width=device-width">
+
+  <title>Service worker</title>
+
+</head>
+
+<body style="margin:5% 10% 0 10%">
+  <canvas id="cvProgress" height="250" width="15" />
+  <div id='loadZone'>
+
+  </div>
+
+  <script src="/canvas/CanvasProgress.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/sw-test/sw.js', { scope: '/sw-test/' }).then(function (reg) {
+
+        if (reg.installing) {
+          console.log('Service worker installing');
+        } else if (reg.waiting) {
+          console.log('Service worker installed');
+        } else if (reg.active) {
+          console.log('Service worker active');
+        }
+
+      }).catch(function (error) {
+        // registration failed
+        console.log('Registration failed with ' + error);
+      });
+    }
+
+
+    let ps = new CanvasProgress(cvProgress, {
+      edgeWidth: 50,
+      bgColor: '#654321'
+    }), progress = 0
+
+    window.onload = function () {
+
+      var resouces = [
+        '/sw-test/style.css',
+        '/sw-test/app.js',
+        '/sw-test/image-list.js',
+        '/sw-test/star-wars-logo.jpg',
+        '/sw-test/bountyHunters.jpg',
+        '/sw-test/myLittleVader.jpg',
+        '/sw-test/snowTroopers.jpg'
+      ], total = resouces.length, loaded = 0;
+
+      resouces.forEach((v,i) => {
+        setTimeout(function () { buildElement(v) }, 1000 * i)
+      });
+
+
+      function buildElement(fileName = '') {
+        let suffix = fileName.substring(fileName.lastIndexOf('.')),
+          el
+        switch (suffix) {
+          case '.js':
+            el = document.createElement('script');
+            el.src = fileName
+            break;
+          case '.jpg':
+            el = document.createElement('img')
+            el.src = fileName
+            break
+          case '.css':
+            el = document.createElement('link')
+            el.rel = "stylesheet"
+            el.href = fileName
+            break
+        }
+        if (el) {
+          el.onload = function () {
+            let percent =  (++loaded * 100 / total).toFixed(0);
+            ps.updateProgress(percent)
+            if(percent >= 100){
+              window.location.href = '/sw-test/'
+            }
+          }
+          loadZone.appendChild(el)
+        }
+      }
+
+    }
+  </script>
+
+</body>
+
+</html>

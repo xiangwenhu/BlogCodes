@@ -65,6 +65,9 @@
                     <a href="javascript:;" class="singer_tag__item" data-key="9" hidefocus>#</a>
                 </div>
             </div>
+            <div id='totalInfo'>
+
+            </div>
             <div id="mod-singerlist">
                 <div class="mod_singer_list">
                     <ul class="singer_list__list js_avtar_list">
@@ -81,13 +84,26 @@
     <script src="scripts/API/request.js"></script>
     <script src="scripts/API/singer.js"></script>
     <script>
+        let singerListEL = document.querySelector('.mod_singer_list')
+
         function search(type = 'all_all', hot = 'all') {
 
-            Singer.search(type, hot).then(res => res.json()).then(result => {
-                if (result.code == 0 && result.data && result.data.list) {
+            Singer.search(type, hot).then(res => res.text()).then(result => {
+                if (result) {
+                    return JSON.parse(result)
+                }
+                //TODO::
+                throw new Error('请求失败')
+            }).then(result => {
+                let d = result.data
+                if (result.code == 0 && d && d.list) {
+
+
+                    //总数据信息
+                    totalInfo.innerHTML = `<span>Per Page:${d.per_page} &nbsp;</span><span>total:${d.total}&nbsp;</span><span>total page:${d.total_page}</span>`
+
                     let listEl = document.querySelector('.singer_list__list')
-                    let parentEl = listEl.parentElement
-                    listEl.parentElement.removeChild(listEl)
+                    listEl && singerListEL.removeChild(listEl)
                     let listHtmlStr = '';
                     result.data.list.forEach(s => {
                         listHtmlStr += `                    
@@ -95,7 +111,7 @@
                             <div class="singer_list__item_box">
                                 <a href="https://y.qq.com/n/yqq/singer/${s.Fsinger_mid}.html#stat=y_new.singerlist.singerpic" class="singer_list__cover js_singer"
                                     hidefocus="true" data-stat="y_new.singerlist.singerpic" data-singermid="001TpDgn4SxyJn" data-singerid="162691" title="${s.Fsinger_name}">
-                                                    <img class="singer_list__pic" onerror="this.src='//y.gtimg.cn/mediastyle/global/img/singer_300.png?max_age=2592000';this.onerror=null;" src="//y.gtimg.cn/music/photo_new/T001R150x150M000${s.Fsinger_mid}.jpg?max_age=2592000" alt="${s.Fsinger_name}">
+                                                    <img data-singermid="${s.Fsinger_mid}" class="singer_list__pic" onerror="this.src='//y.gtimg.cn/mediastyle/global/img/singer_300.png?max_age=2592000';this.onerror=null;" src="//y.gtimg.cn/music/photo_new/T001R150x150M000${s.Fsinger_mid}.jpg?max_age=2592000" alt="${s.Fsinger_name}">
                                                 </a>
                                 <h3 class="singer_list__title"><a href="https://y.qq.com/n/yqq/singer/${s.Fsinger_mid}.html#stat=y_new.singerlist.singername" data-singermid="${s.Fsinger_mid}"
                                         data-id="162691" class="js_singer" data-stat="y_new.singerlist.singername" title="${s.Fsinger_name}">${s.Fsinger_name}</a></h3>
@@ -103,10 +119,32 @@
                         </li>
                     `
                     });
-                    parentEl.innerHTML = `<ul class="singer_list__list js_avtar_list">${listHtmlStr}</ul>`
+                    singerListEL.innerHTML = `<ul class="singer_list__list js_avtar_list">${listHtmlStr}</ul>`
 
                 } else {
                     alert(result)
+                }
+            }).catch(e => {
+                let listEl = document.querySelector('.singer_list__list')
+                listEl && singerListEL.removeChild(listEl)
+            })
+        }
+
+        function simSinger(singermid) {
+            return Singer.simsinger(singermid).then(res => res.json()).then(result => {
+                if (result.singers && result.singers.items) {
+                    let htmlStr = '', items = result.singers.items
+                    items.forEach(s => {
+                        htmlStr += `<li class="singer_list__item" style="display:inline-block;width:300px">
+                        <div class="singer_list__item_box">
+                            <a href="https://y.qq.com/n/yqq/singer/${s.mid}.html#stat=y_new.singer.index.same_singers" class="singer_list__cover js_singer" data-stat="y_new.singer.index.same_singers" data-mid="${s.mid}" data-id="${s.id}" title="${s.name}" hidefocus="true">
+                                <img class="singer_list__pic" onerror="this.src='//y.gtimg.cn/mediastyle/global/img/singer_300.png?max_age=31536000';this.onerror=null;" src="//y.gtimg.cn/music/photo_new/T001R150x150M000${s.mid}.jpg?max_age=2592000" alt="${s.name}">
+                            </a>
+                            <h3 class="singer_list__title"><a href="https://y.qq.com/n/yqq/singer/${s.mid}.html#stat=y_new.singer.index.same_singers" class="js_singer" data-stat="y_new.singer.index.same_singers" data-mid="${s.mid}" data-id="${s.id}" title="${s.name}">${s.name}</a></h3>
+                        </div>
+                    </li>`
+                    })
+                    return htmlStr
                 }
             })
         }
@@ -126,8 +164,30 @@
             if (ev.target.tagName == 'A') {
                 document.querySelectorAll('.js_letter .singer_tag__item--select').forEach(el => el.classList.remove('singer_tag__item--select'))
                 ev.target.classList.add('singer_tag__item--select')
-                search(document.querySelector('.js_area .singer_tag__item--select').getAttribute('data-key'),ev.target.getAttribute('data-key'))
+                search(document.querySelector('.js_area .singer_tag__item--select').getAttribute('data-key'), ev.target.getAttribute('data-key'))
             }
+        })
+
+        singerListEL.addEventListener('mouseover', ev => {
+            if (ev.target.tagName == 'IMG' && ev.target.getAttribute('data-singermid') != null) {
+                let singerMid = ev.target.getAttribute('data-singermid')
+                simSinger(singerMid).then(htmlStr=>{
+                    let ulEl = document.createElement('ul') 
+                    ulEl.classList = 'sim_singer_list singer_list__list'
+                    ulEl.style = 'display:inline-block;width:1800px'
+                    ulEl.innerHTML = htmlStr
+                    ev.target.parentElement.parentElement.parentElement.appendChild(ulEl)
+                })
+            }
+            
+        })
+
+        singerListEL.addEventListener('mouseout', ev => {
+            if (ev.target.tagName == 'IMG') {
+                let modList = document.querySelector('.sim_singer_list')
+                //modList && modList.parentElement.removeChild(modList)
+            }
+            ev.stopPropagation()
         })
 
 

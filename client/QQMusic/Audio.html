@@ -20,6 +20,7 @@
 
     </div>
 
+    <script src="scripts/request.js"></script>
     <script>
         btnPlay.addEventListener('click', () => {
             let mid = songmid.value,
@@ -46,10 +47,6 @@
             console.log(ev)
         }
 
-        function request(url, options = {}) {
-            let realUrl = `/api/common/get?url=${encodeURIComponent(url)}`
-            return fetch(realUrl, options)
-        }
 
         function getVkeyUrl(mid) {
             return 'https://c.y.qq.com/base/fcgi-bin/fcg_music_express_mobile3.fcg?' +

@@ -1,0 +1,138 @@
+<!DOCType>
+<html>
+
+<head>
+    <title>歌手</title>
+    <style>
+        .singer_tag__item--select {
+            background-color: #31c27c
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <div class="main">
+            <div class="mod_singer_tag">
+                <div class="singer_tag__list js_area">
+                    <a href="javascript:;" class="singer_tag__item singer_tag__item--all singer_tag__item--select" data-key="all_all" hidefocus>全部</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="cn_man" hidefocus>华语男</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="cn_woman" hidefocus>华语女</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="cn_team" hidefocus>华语组合</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="k_man" hidefocus>韩国男</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="k_woman" hidefocus>韩国女</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="k_team" hidefocus>韩国组合</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="j_man" hidefocus>日本男</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="j_woman" hidefocus>日本女</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="j_team" hidefocus>日本组合</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="eu_man" hidefocus>欧美男</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="eu_woman" hidefocus>欧美女</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="eu_team" hidefocus>欧美组合</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="c_orchestra" hidefocus>乐团</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="c_performer" hidefocus>演奏家</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="c_composer" hidefocus>作曲家</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="c_cantor" hidefocus>指挥家</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="other_other" hidefocus>其他</a>
+                </div>
+                <div class="singer_tag__list js_letter">
+                    <a href="javascript:;" class="singer_tag__item singer_tag__item--all singer_tag__item--select" data-key="all" hidefocus>热门</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="A" hidefocus>A</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="B" hidefocus>B</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="C" hidefocus>C</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="D" hidefocus>D</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="E" hidefocus>E</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="F" hidefocus>F</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="G" hidefocus>G</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="H" hidefocus>H</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="I" hidefocus>I</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="J" hidefocus>J</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="K" hidefocus>K</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="L" hidefocus>L</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="M" hidefocus>M</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="N" hidefocus>N</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="O" hidefocus>O</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="P" hidefocus>P</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="Q" hidefocus>Q</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="R" hidefocus>R</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="S" hidefocus>S</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="T" hidefocus>T</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="U" hidefocus>U</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="V" hidefocus>V</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="W" hidefocus>W</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="X" hidefocus>X</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="Y" hidefocus>Y</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="Z" hidefocus>Z</a>
+                    <a href="javascript:;" class="singer_tag__item" data-key="9" hidefocus>#</a>
+                </div>
+            </div>
+            <div id="mod-singerlist">
+                <div class="mod_singer_list">
+                    <ul class="singer_list__list js_avtar_list">
+
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+    <script src="scripts/API/request.js"></script>
+    <script src="scripts/API/singer.js"></script>
+    <script>
+        function search(type = 'all_all', hot = 'all') {
+
+            Singer.search(type, hot).then(res => res.json()).then(result => {
+                if (result.code == 0 && result.data && result.data.list) {
+                    let listEl = document.querySelector('.singer_list__list')
+                    let parentEl = listEl.parentElement
+                    listEl.parentElement.removeChild(listEl)
+                    let listHtmlStr = '';
+                    result.data.list.forEach(s => {
+                        listHtmlStr += `                    
+                        <li class="singer_list__item">
+                            <div class="singer_list__item_box">
+                                <a href="https://y.qq.com/n/yqq/singer/${s.Fsinger_mid}.html#stat=y_new.singerlist.singerpic" class="singer_list__cover js_singer"
+                                    hidefocus="true" data-stat="y_new.singerlist.singerpic" data-singermid="001TpDgn4SxyJn" data-singerid="162691" title="${s.Fsinger_name}">
+                                                    <img class="singer_list__pic" onerror="this.src='//y.gtimg.cn/mediastyle/global/img/singer_300.png?max_age=2592000';this.onerror=null;" src="//y.gtimg.cn/music/photo_new/T001R150x150M000${s.Fsinger_mid}.jpg?max_age=2592000" alt="${s.Fsinger_name}">
+                                                </a>
+                                <h3 class="singer_list__title"><a href="https://y.qq.com/n/yqq/singer/${s.Fsinger_mid}.html#stat=y_new.singerlist.singername" data-singermid="${s.Fsinger_mid}"
+                                        data-id="162691" class="js_singer" data-stat="y_new.singerlist.singername" title="${s.Fsinger_name}">${s.Fsinger_name}</a></h3>
+                            </div>
+                        </li>
+                    `
+                    });
+                    parentEl.innerHTML = `<ul class="singer_list__list js_avtar_list">${listHtmlStr}</ul>`
+
+                } else {
+                    alert(result)
+                }
+            })
+        }
+
+
+
+        document.querySelector('.js_area').addEventListener('click', function (ev) {
+            if (ev.target.tagName == 'A') {
+                document.querySelectorAll('.js_area .singer_tag__item--select').forEach(el => el.classList.remove('singer_tag__item--select'))
+                ev.target.classList.add('singer_tag__item--select')
+                search(ev.target.getAttribute('data-key'), document.querySelector('.js_letter .singer_tag__item--select').getAttribute('data-key'))
+            }
+        })
+
+
+        document.querySelector('.js_letter').addEventListener('click', function (ev) {
+            if (ev.target.tagName == 'A') {
+                document.querySelectorAll('.js_letter .singer_tag__item--select').forEach(el => el.classList.remove('singer_tag__item--select'))
+                ev.target.classList.add('singer_tag__item--select')
+                search(document.querySelector('.js_area .singer_tag__item--select').getAttribute('data-key'),ev.target.getAttribute('data-key'))
+            }
+        })
+
+
+        search()
+    </script>
+</body>
+
+</html>

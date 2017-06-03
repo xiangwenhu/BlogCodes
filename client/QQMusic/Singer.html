@@ -1,4 +1,4 @@
-<!DOCType>
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -81,14 +81,16 @@
     </div>
 
 
+    <script src="scripts/API/consts.js"></script>
     <script src="scripts/API/request.js"></script>
+    <script src="scripts/API/search.js"></script>
     <script src="scripts/API/singer.js"></script>
     <script>
         let singerListEL = document.querySelector('.mod_singer_list')
 
         function search(type = 'all_all', hot = 'all') {
 
-            Singer.search(type, hot).then(res => res.text()).then(result => {
+            Search.singers(type, hot).then(res => res.text()).then(result => {
                 if (result) {
                     return JSON.parse(result)
                 }
@@ -131,7 +133,9 @@
         }
 
         function simSinger(singermid) {
-            return Singer.simsinger(singermid).then(res => res.json()).then(result => {
+
+
+            return new Singer(singermid).simsinger().then(res => res.json()).then(result => {
                 if (result.singers && result.singers.items) {
                     let htmlStr = '', items = result.singers.items
                     items.forEach(s => {
@@ -171,15 +175,15 @@
         singerListEL.addEventListener('mouseover', ev => {
             if (ev.target.tagName == 'IMG' && ev.target.getAttribute('data-singermid') != null) {
                 let singerMid = ev.target.getAttribute('data-singermid')
-                simSinger(singerMid).then(htmlStr=>{
-                    let ulEl = document.createElement('ul') 
+                simSinger(singerMid).then(htmlStr => {
+                    let ulEl = document.createElement('ul')
                     ulEl.classList = 'sim_singer_list singer_list__list'
                     ulEl.style = 'display:inline-block;width:1800px'
                     ulEl.innerHTML = htmlStr
                     ev.target.parentElement.parentElement.parentElement.appendChild(ulEl)
                 })
             }
-            
+
         })
 
         singerListEL.addEventListener('mouseout', ev => {

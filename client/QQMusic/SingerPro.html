@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        歌手的歌曲
+    </title>
+    <link rel="stylesheet" href="css/layout0323.css?max_age=25920000">
+    <link rel="stylesheet" href="css/singer_detail.css?max_age=25920000">
+</head>
+
+<body>
+
+    <div>
+        获得歌曲
+
+    </div>
+
+    <script src="scripts/API/consts.js"></script>
+    <script src="scripts/API/request.js"></script>
+    <script src="scripts/API/search.js"></script>
+    <script src="scripts/API/singer.js"></script>
+
+
+    <script>
+        //歌手的歌曲
+        let singer = new Singer('001fNHEf1SFEFN')
+        singer.songs().then(res => res.json()).then(data => {
+            console.log('歌手的歌曲：')
+            console.log(data)
+        })
+
+        //歌手的专辑
+        singer.albums().then(res => res.json()).then(data => {
+            console.log('歌手的专辑：')
+            console.log(data)
+        })
+
+
+        //专辑信息
+        Search.albumInfo('000mmrVb4fam2C').then(res => res.json()).then(data => {
+            console.log('专辑的信息：')
+            console.log(data)
+        })
+    </script>
+</body>
+
+</html>

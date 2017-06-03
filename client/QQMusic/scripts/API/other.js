@@ -1,0 +1,5 @@
+const other = {
+    hotkey:function(){
+        
+    }
+}

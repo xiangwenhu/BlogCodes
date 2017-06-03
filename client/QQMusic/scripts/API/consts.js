@@ -12,6 +12,8 @@ const URL_SINGER_ALBUM = `${FCG_BIN}/fcg_v8_singer_album.fcg?format=json&order=t
 //专辑信息
 const URL_ALBUM_INFO = `${FCG_BIN}/fcg_v8_album_info_cp.fcg?${COMMON_PARAMS}`
 //热门搜索关键字
-const HOT_KEY = `${FCG_BIN}/gethotkey.fcg?${COMMON_PARAMS}`
+const URL_HOT_KEY = `https://c.y.qq.com/splcloud/fcgi-bin/gethotkey.fcg?${COMMON_PARAMS}`
+//搜索结果-单曲
+const URL_SEARCH_CLIENT = `https://c.y.qq.com/soso/fcgi-bin/client_search_cp?format=json&ct=24&qqmusic_ver=1298&new_json=1&t=0&aggr=1&cr=1&catZhida=1&lossless=0&flag_qc=0${COMMON_PARAMS}`
 
 

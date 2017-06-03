@@ -20,6 +20,7 @@
     <script src="scripts/API/request.js"></script>
     <script src="scripts/API/search.js"></script>
     <script src="scripts/API/singer.js"></script>
+    <script src="scripts/API/Other.js"></script>
 
 
     <script>
@@ -40,6 +41,19 @@
         //专辑信息
         Search.albumInfo('000mmrVb4fam2C').then(res => res.json()).then(data => {
             console.log('专辑的信息：')
+            console.log(data)
+        })
+
+
+        //热门关键字
+        Other.hotkey().then(res => res.json()).then(data => {
+            console.log('热门关键字：')
+            console.log(data)
+        })
+
+        //搜索
+        Search.search('择天记').then(res => res.json()).then(data => {
+            console.log('搜索：')
             console.log(data)
         })
     </script>

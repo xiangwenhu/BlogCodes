@@ -196,6 +196,13 @@
 
 
         search()
+
+
+        let singer = new Singer('003ArN8Z0WpjTz')
+        singer.desc().then(res=>res.text()).then(data=>{
+            console.log(data)
+        }).catch(err=>console.log(err))
+
     </script>
 </body>
 

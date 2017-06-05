@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        排行榜
+    </title>
+    <link rel="stylesheet" href="css/layout0323.css?max_age=25920000">
+    <link rel="stylesheet" href="css/singer_detail.css?max_age=25920000">
+</head>
+
+<body>
+
+
+    <script src="scripts/API/consts.js"></script>
+    <script src="scripts/API/request.js"></script>
+    <script src="scripts/API/search.js"></script>
+    <script src="scripts/API/singer.js"></script>
+    <script src="scripts/API/Other.js"></script>
+
+
+    <script>
+        //排行榜分类
+        Other.topList().then(data => {
+            console.log('排行榜分类：')
+            console.log(data)
+        })
+
+        //某个排行榜的详情
+        Other.topListList().then(res => res.json()).then(data => {
+            console.log('排行榜详情 4：')
+            console.log(data)
+        })
+
+        // Vkey
+        Other.vkey('004Dbsoo1yCbNZ').then(res => res.json()).then(data => {
+            console.log('音频视频Vkey')
+            console.log(data)
+        })
+
+        //专辑搜索
+        Search.albumLib().then(res=>res.json()).then(data => {
+            console.log('专辑搜索')
+            console.log(data)
+        })
+
+    </script>
+</body>
+
+</html>

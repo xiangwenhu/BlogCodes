@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        歌单
+    </title>
+    <link rel="stylesheet" href="css/layout0323.css?max_age=25920000">
+    <link rel="stylesheet" href="css/singer_detail.css?max_age=25920000">
+</head>
+
+<body>
+
+
+    <script src="scripts/API/consts.js"></script>
+    <script src="scripts/API/request.js"></script>
+    <script src="scripts/API/search.js"></script>
+    <script src="scripts/API/singer.js"></script>
+    <script src="scripts/API/Other.js"></script>
+
+
+    <script>
+        //歌单分类
+        Other.dissTagConf().then(res => res.json()).then(data => {
+            console.log('歌单分类：')
+            console.log(data)
+        })
+
+        //按照分类查询歌单
+        Other.dissByTag().then(res => res.json()).then(data => {
+            console.log('按照分类查询歌单：')
+            console.log(data)
+        })
+
+        //歌单内容查询
+        Other.dissInfo('1750213769').then(res => res.json()).then(data => {
+            console.log('歌单内容查询：')
+            console.log(data)
+        })
+
+        //相似歌单
+        Other.dissSimilar('1750213769').then(res => res.json()).then(data => {
+            console.log('相似歌单：')
+            console.log(data)
+        })
+
+        //MV 带 taglist
+        Search.mvByTag().then(res => res.json()).then(data => {
+            console.log('mv 带taglist：')
+            console.log(data)
+        })
+
+        Search.mvByTag(0, 0, 0, 2,0).then(res => res.json()).then(data => {
+            console.log('mv 不带taglist：')
+            console.log(data)
+        })
+
+    </script>
+</body>
+
+</html>

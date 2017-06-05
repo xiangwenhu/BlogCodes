@@ -13,16 +13,15 @@ router.get('/get', async (ctx) => {
 
 })
 
-router.post('/get', async (ctx) => {
-
-    let body = await request.get(ctx.query.url)
+router.post('/get', async (ctx) => {    
+    let body = await request.get(ctx.query.url, ctx.request.fields)
     ctx.body = body
 
 })
 
 router.get('/media', async (ctx) => {
     ctx.body = orgRequest({
-        url: ctx.query.url      
+        url: ctx.query.url
     })
 })
 

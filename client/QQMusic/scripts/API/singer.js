@@ -23,5 +23,22 @@ class Singer {
         let url = `${URL_SINGER_ALBUM}&singermid=${this.singermid}&begin=${begin}&num=${num}`
         return request(url)
     }
+
+    //歌手描述
+    desc() {
+        let r = new Date().getTime(),
+            url = `${URL_SINGER_DESC}&singermid=${this.singermid}&r=${r}`
+        return request(url, {
+            method: 'POST',
+            headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                headers: {  
+                    referer: 'https://c.y.qq.com/xhr_proxy_utf8.html',
+                    'Host': 'y.qq.com',
+                    'Origin': 'https://y.qq.com'
+                }               
+            })
+        })
+    }
 }
 

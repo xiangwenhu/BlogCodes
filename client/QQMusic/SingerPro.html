@@ -51,11 +51,30 @@
             console.log(data)
         })
 
-        //搜索
-        Search.search('择天记').then(res => res.json()).then(data => {
-            console.log('搜索：')
+        //搜索歌曲
+        Search.searchSongs('择天记').then(res => res.json()).then(data => {
+            console.log('搜索歌曲：')
             console.log(data)
         })
+
+        //搜索mv
+        Search.searchMVs('择天记').then(res => res.json()).then(data => {
+            console.log('搜索MV：')
+            console.log(data)
+        })
+
+        //搜索专辑
+        Search.searchAlbums('择天记').then(res => res.json()).then(data => {
+            console.log('搜索专辑：')
+            console.log(data)
+        })
+
+        //搜索后的智能搜素
+        Search.smartBox('小').then(res => res.json()).then(data => {
+            console.log('搜索后的智能搜素：')
+            console.log(data)
+        })
+
     </script>
 </body>
 

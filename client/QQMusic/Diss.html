@@ -50,8 +50,28 @@
             console.log(data)
         })
 
+        // MV 不带 taglist
         Search.mvByTag(0, 0, 0, 2,0).then(res => res.json()).then(data => {
             console.log('mv 不带taglist：')
+            console.log(data)
+        })
+
+
+        //MV 信息
+         Search.mvInfo('y0023oon10v').then(data => {
+            console.log('MV 信息：')
+            console.log(data)
+        })
+
+        //相似 MV
+         Search.mvByTag('y0023oon10v').then(res => res.json()).then(data => {
+            console.log('相似 MV：')
+            console.log(data)
+        })
+
+        //首页推荐
+        Other.RecomList().then(res => res.json()).then(data => {
+            console.log('首页推荐：')
             console.log(data)
         })
 

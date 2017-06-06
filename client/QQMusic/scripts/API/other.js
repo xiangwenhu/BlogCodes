@@ -15,7 +15,7 @@ const Other = {
             return res.text()
         }).then(content => {
             function jsonCallback(data) {
-                return data
+                return JSON.stringify(data)
             }
             return eval(content)
         })
@@ -88,6 +88,13 @@ const Other = {
     dissSimilar(dissid,maxnum=6){
         let url = `${URL_DISS_SIMILAR}&dissid=${dissid}&maxnum=${maxnum}&_=${new Date().getTime()}`
         return request(url)
+    },
+
+    //首页推荐
+    RecomList(){       
+        let url = `${URL_RRCOM}&rnd=${(Math.random()*Math.pow(10,16)).toFixed(0)}`  
+        return request(URL_RRCOM)
     }
+
 
 }

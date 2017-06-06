@@ -3,7 +3,8 @@ const FCG_BIN = 'https://c.y.qq.com/v8/fcg-bin'
 const FCGI_BIN = 'https://c.y.qq.com/soso/fcgi-bin'
 const FCGI_BIN_SPCLOUD = 'https://c.y.qq.com/splcloud/fcgi-bin'
 const FCG_BIN_QZONE = 'https://c.y.qq.com/qzone/fcg-bin'
-const FCG_BIN_MUSIC_CALL= 'https://c.y.qq.com/musichall/fcgi-bin'
+const FCG_BIN_MUSIC_CALL = 'https://c.y.qq.com/musichall/fcgi-bin'
+const FCG_BIN_MV = 'https://c.y.qq.com/mv/fcgi-bin'
 
 //搜索歌手
 const URL_SEARCH_SINGER = `${FCG_BIN}/v8.fcg?channel=singer&page=list&format=json&${COMMON_PARAMS}`
@@ -48,7 +49,7 @@ const URL_VKEY = `https://c.y.qq.com/base/fcgi-bin/fcg_music_express_mobile3.fcg
 //歌单的分类
 const URL_DISS_TAG_CONF = `${FCGI_BIN_SPCLOUD}/fcg_get_diss_tag_conf.fcg?format=json&${COMMON_PARAMS}`
 //按照分类查询歌单
-const URL_DISS_BYTAG  = `${FCGI_BIN_SPCLOUD}/fcg_get_diss_by_tag.fcg?format=json&sin=0&ein=29&${COMMON_PARAMS}`
+const URL_DISS_BYTAG = `${FCGI_BIN_SPCLOUD}/fcg_get_diss_by_tag.fcg?format=json&sin=0&ein=29&${COMMON_PARAMS}`
 //获取某个歌单的内容
 const URL_DISS_INFO = `${FCG_BIN_QZONE}/fcg_ucc_getcdinfo_byids_cp.fcg?type=1&json=1&utf8=1&onlysong=0&format=json&${COMMON_PARAMS}`
 //相似歌单
@@ -58,7 +59,13 @@ const URL_DISS_SIMILAR = `${FCG_BIN_MUSIC_CALL}/fcg_similar_recomm.fcg?recomtype
 
 //MV查询 taglist=1 有标签
 const URL_MV_BYTAG = `${FCG_BIN}/getmv_by_tag?utf8=1&otype=json&format=json&${COMMON_PARAMS}`
+// MV信息
+const URL_MV_INFO = `${FCG_BIN_MV}/fcg_getmvinfo.fcg?format=json&${COMMON_PARAMS}`
+//相似MV
+const URL_MV_SIMILAR = `${FCG_BIN_MV}/fcg_getmvlist.fcg?reqtype=1&cid=205360328&format=json&${COMMON_PARAMS}`
 
+//首页推荐
+const URL_RRCOM = `${FCG_BIN}/fcg_first_yqq.fcg?format=json&tpl=v12&page=other&${COMMON_PARAMS}`
 
 
 

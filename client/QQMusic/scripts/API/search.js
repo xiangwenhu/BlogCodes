@@ -69,6 +69,7 @@ const Search = {
      * @param {*} area  区域
      * @param {*} tag   类型 官方版/舞蹈等
      * @param {*} year  年份
+     * @param {*} type 排序 2最热/1最新
      * @param {*} taglist  是否带标签， 1带/0不带
      * @param {*} pageno  页码
      * @param {*} pagecount  也大小
@@ -76,7 +77,31 @@ const Search = {
     mvByTag(area = 0, tag = 0, year = 0, type = 2,taglist = 1, pageno = 0, pagecount = 20) {
         let url = `${URL_MV_BYTAG}&area=${area}&tag=${tag}&year=${year}&type=${type}&taglist=${taglist}&pageno=${pageno}&pagecount=${pagecount}&_=${Math.random().toFixed(16)}`
         return request(url)
+    },
+
+    /**
+     * 获得MV的信息
+     * @param {*} vid  mv id
+     */
+    mvInfo(vid){
+        let url = `${URL_MV_INFO}&vid=${vid}`
+        return request(url).then(res=>res.text()).then(content=>{
+            function MusicJsonCallback(data){
+                return data
+            }
+            return  eval(content)
+        })
+    },
+    
+     /**
+      * 相似MV
+      *@param {*} vid  mv id
+      */
+     mvSimilar(vid){
+        let url = `${URL_MV_SIMILAR}&vid=${vid}`
+        return request(url)
     }
+
 
 
 }

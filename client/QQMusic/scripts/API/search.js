@@ -74,7 +74,7 @@ const Search = {
      * @param {*} pageno  页码
      * @param {*} pagecount  也大小
      */
-    mvByTag(area = 0, tag = 0, year = 0, type = 2,taglist = 1, pageno = 0, pagecount = 20) {
+    mvByTag(area = 0, tag = 0, year = 0, type = 2, taglist = 1, pageno = 0, pagecount = 20) {
         let url = `${URL_MV_BYTAG}&area=${area}&tag=${tag}&year=${year}&type=${type}&taglist=${taglist}&pageno=${pageno}&pagecount=${pagecount}&_=${Math.random().toFixed(16)}`
         return request(url)
     },
@@ -83,23 +83,40 @@ const Search = {
      * 获得MV的信息
      * @param {*} vid  mv id
      */
-    mvInfo(vid){
+    mvInfo(vid) {
         let url = `${URL_MV_INFO}&vid=${vid}`
-        return request(url).then(res=>res.text()).then(content=>{
-            function MusicJsonCallback(data){
-                return data
-            }
-            return  eval(content)
+        return request(url).then(res => res.text()).then(content => {
+            return eval(content)
         })
     },
-    
-     /**
-      * 相似MV
-      *@param {*} vid  mv id
-      */
-     mvSimilar(vid){
+
+    /**
+     * 相似MV
+     *@param {*} vid  mv id
+     */
+    mvSimilar(vid) {
         let url = `${URL_MV_SIMILAR}&vid=${vid}`
         return request(url)
+    },
+
+    /**
+     * 获取歌词信息  decodeURIComponent(escape(window.atob('sds==' )))
+     * @param {*} songmid  歌曲id
+     */
+    lyric(songmid) {
+        let url = `${URL_SONG_LYR}&songmid=${songmid}&pcachetime=${new Date().getTime()}`
+        return request(url, {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                headers: {
+                    referer: 'https://y.qq.com/portal/player.html'
+                }
+            })
+        }).then(res=>res.text()).then(content=>eval(content))
     }
 
 

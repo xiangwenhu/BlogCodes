@@ -12,7 +12,7 @@
 
         <canvas id='canvas' height="200" width='200'></canvas>           
 
-        <p>mid:<input id='songmid' value="004Dbsoo1yCbNZ" /><input type="button" id='btnPlay' value='播放'></p> 
+        <p>mid:<input id='songmid' value="004Dbsoo1yCbNZ" /><input type="button" id='btnPlay' value='播放'> <input type="button" id="btnPlayVideo"  value="播放视频" > </p> 
 
         <p></p>
 
@@ -38,6 +38,25 @@
                     }
                 })
         })
+
+
+        btnPlayVideo.addEventListener('click', () => {
+            let mid = songmid.value,
+                fileName = `C400${mid}.m4a`
+
+            request(getVkeyUrl(mid)).then(r => r.json())
+                .then(kv => {
+                    if (kv && kv.data && kv.data.items && kv.data.items.length > 0) {
+                        let kInfo = kv.data.items[0],
+                            filename = kInfo.filename,
+                            vkey = kInfo.vkey;
+                        player.src = `/api/common/media?url=${encodeURIComponent(getMediaUrl(filename, vkey))}`
+                        player.play()
+
+                    }
+                })
+        })
+
 
         player.onended = function () {
             player.play()

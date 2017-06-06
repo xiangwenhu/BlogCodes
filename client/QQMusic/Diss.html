@@ -57,7 +57,7 @@
         })
 
 
-        //MV 信息
+        //MV 信息 json
          Search.mvInfo('y0023oon10v').then(data => {
             console.log('MV 信息：')
             console.log(data)
@@ -73,6 +73,12 @@
         Other.RecomList().then(res => res.json()).then(data => {
             console.log('首页推荐：')
             console.log(data)
+        })
+
+        //歌词 json
+        Search.lyric('003mkTmw0vPHlE').then(data => {
+            console.log('003mkTmw0vPHlE 歌词：')
+            console.log( decodeURIComponent(escape(window.atob(data.lyric))))
         })
 
     </script>

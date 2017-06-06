@@ -68,4 +68,13 @@ const URL_MV_SIMILAR = `${FCG_BIN_MV}/fcg_getmvlist.fcg?reqtype=1&cid=205360328&
 const URL_RRCOM = `${FCG_BIN}/fcg_first_yqq.fcg?format=json&tpl=v12&page=other&${COMMON_PARAMS}`
 
 
+//歌曲歌词
+const URL_SONG_LYR = `https://c.y.qq.com/lyric/fcgi-bin/fcg_query_lyric_new.fcg?${COMMON_PARAMS}&format=json`
+
+
+const MusicJsonCallback = function (data) {
+    return data
+}
+
+
 

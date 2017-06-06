@@ -1,0 +1,33 @@
+Request URL:https://vv.video.qq.com/getvinfo
+Request Method:POST
+
+fp2p:1
+encryptVer:5.4
+ehost:https://y.qq.com/n/yqq/mv/v/t0015lsf9eg.html#
+fhdswitch:0
+defsrc:1
+speed:377
+defnpayver:1
+vid:t0015lsf9eg
+ran:0.8740895898081362
+otype:xml
+refer:https://y.qq.com/n/yqq/mv/v/q0020imterm.html
+ip:
+drm:8
+sphttps:1
+sphls:1
+guid:C419492BD908999AAE7C3BE298FDEAA1
+dtype:3
+platform:70202
+pid:F13A571BB3D1089B3BDD72F216D0B320
+newplatform:70202
+spwm:1
+linkver:2
+cKey:sb1yjStccFoYqsNGrK034xhHCph62nvl797qJ_xhPYriNkNKjRzG5NbkeDkL4vpzlRjGeeHHsNGFSumtmHgBcSLiovK5phC7ZIXLtZvIiL2ujXnLWr9-hO0JrzMFg3yeH097gDqMCB49zlUXkwAstA3w4sx1vdYm3QOfv_LpHvezWd-Rkq8-b57dDgV9Ye9jolvzHRqZFsp_wR9L_TW0pNYMqiSMY2vBZrvenr4AncLd-uquVJp6TDKrMPbGEgICGYvlqg
+utype:-1
+appver:3.2.38.422
+charge:0
+
+
+<?xml version="1.0" encoding="utf-8"  standalone="no" ?>
+<root><dltype>1</dltype><exem>0</exem><fl><cnt>3</cnt><fi><id>11303</id><name>sd</name><lmt>0</lmt><sb>1</sb><cname>标清;(270P)</cname><br>64</br><drm>0</drm><video>1</video><fs>10041069</fs><sl>0</sl></fi><fi><id>11302</id><name>hd</name><lmt>0</lmt><sb>1</sb><cname>高清;(360P)</cname><br>235</br><drm>0</drm><video>1</video><fs>22244699</fs><sl>1</sl></fi><fi><id>11301</id><name>shd</name><lmt>0</lmt><sb>1</sb><cname>超清;(720P)</cname><br>650</br><drm>0</drm><video>1</video><fs>39915137</fs><sl>0</sl></fi></fl><hs>0</hs><ip>106.39.84.163</ip><ls>0</ls><preview>268</preview><s>o</s><sfl><cnt>0</cnt></sfl><tm>1496731999</tm><vl><cnt>1</cnt><vi><br>80</br><ch>0</ch><cl><fc>1</fc><ci><idx>1</idx><cs>22244699</cs><cd>268.190002</cd><cmd5>5f72962c40008b8ad9a2040db6369f05</cmd5><keyid>t0015lsf9eg.11302.1</keyid></ci></cl><ct>21600</ct><dm>1</dm><drm>0</drm><dsb>0</dsb><enc>0</enc><fclip>1</fclip><fmd5>5f72962c40008b8ad9a2040db6369f05</fmd5><fn>t0015lsf9eg.p1302.mp4</fn><fps>25.000000</fps><fs>22244699</fs><fst>5</fst><fvkey>866F6C0B4A652FF87F3403065DD1668962DC9D1370853152CFA13CD05D4085E87B1CF2B251B525693E21719F605010E8F98050AF742F3E5DCFE57041B0CA114067CA3562270AAF7E964B0A16B397D25F4CB28BFEE4FFCA9D58BB52C0A19CDAC51C54A9DC070D1B8F0405A9A82E118D7A</fvkey><head>0</head><hevc>0</hevc><iflag>0</iflag><lnk>t0015lsf9eg</lnk><logo>0</logo><mst>8</mst><pl><cnt>2</cnt><pd><cd>2</cd><h>45</h><w>80</w><r>10</r><c>10</c><fmt>40001</fmt><fn>q1</fn><url>https://puui.qpic.cn/video_caps/0/</url></pd><pd><cd>2</cd><h>90</h><w>160</w><r>5</r><c>5</c><fmt>40002</fmt><fn>q2</fn><url>https://puui.qpic.cn/video_caps/0/</url></pd></pl><share>1</share><st>2</st><tail>0</tail><targetid>1115438298</targetid><td>268.19</td><ti>TFBOYS《青春修炼手册》官方版</ti><type>3585</type><ul><ui><url>http://106.38.183.10/music.qqvideo.tc.qq.com/A3ioF30IZvkucKe4ajegwAgw0yIOljuMNvES3Ay_06so/</url><vt>210</vt><dtc>0</dtc><dt>2</dt></ui><ui><url>http://106.38.183.42/music.qqvideo.tc.qq.com/A3ioF30IZvkucKe4ajegwAgw0yIOljuMNvES3Ay_06so/</url><vt>210</vt><dtc>0</dtc><dt>2</dt></ui><ui><url>http://video.dispatch.tc.qq.com/A3ioF30IZvkucKe4ajegwAgw0yIOljuMNvES3Ay_06so/</url><vt>0</vt><dtc>0</dtc><dt>2</dt></ui></ul><vh>368</vh><vid>t0015lsf9eg</vid><videotype>22</videotype><vr>0</vr><vst>2</vst><vw>640</vw><wh>1.7391304</wh><wl></wl></vi></vl></root>

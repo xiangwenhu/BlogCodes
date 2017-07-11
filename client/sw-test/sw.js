@@ -48,15 +48,14 @@ this.addEventListener('fetch', function (event) {
 
 
 this.addEventListener('message', function (event) {
-  console.log('sw:' + event.data);
+  console.log('sw:' + event.data)
 
-  caches.open('v1').then(function (cache) {
+  caches.open(version).then(function (cache) {
     cache.keys().then(keys => {
       event.ports[0].postMessage(keys.map(k => k.url))
-    });
+    })
 
   })
-  console.log('yy-11-22-33-44-55-66-77')
 
 })
 

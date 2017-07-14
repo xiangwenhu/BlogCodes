@@ -1,0 +1,57 @@
+<!DOCTYPE>
+<html>
+
+<head>
+    <title>Media Recorder</title>
+    <style>
+        .wrapper {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .btn-r,
+        .btn-p {
+            height: 60px;
+            width: 60px;
+            background: green;
+            border-radius: 9999px;
+            line-height: 60px;
+            text-align: center;
+        }
+
+        .btn-c {
+            background: red;         
+        }
+
+        .hide{
+            display: none
+        }
+
+        .op {
+            display: flex;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="wrapper">
+        <div id='timing'>
+        </div>
+        <div id='preview'>
+            <audio controls id='audioPreview'>
+        </div>
+        <div class="op">
+            <div class="btn-p" id='btnRecord'>录制</div>
+            <div class="btn-r hide " id='btnSave'>保存</div>
+            <div class="btn-r btn-c hide" id='btnCancel'>取消</div>
+        </div>
+
+    </div>
+
+
+</body>
+
+<script src="/MediaRecorder/recorder.js"></script>
+
+</html>

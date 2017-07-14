@@ -3,7 +3,12 @@ const koaStatic = require('koa-static')
 const path = require('path')
 const betterBody = require('koa-better-body')
 const routes = require('./routes')
-const app = new Koa()
+const app = new Koa(),
+  fs = require('fs'),
+  https = require('https'),
+  privateKey = fs.readFileSync(path.join(__dirname, '/cert/private.pem'), 'utf8'),
+  certificate = fs.readFileSync(path.join(__dirname, '/cert/file.crt'), 'utf8'),
+  credentials = { key: privateKey, cert: certificate }
 
 
 //better body
@@ -51,5 +56,5 @@ app.on('error', (err, ctx) => {
 })
 
 
-
-app.listen(8085)
+var server = https.createServer(credentials, app.callback())
+server.listen(8085)

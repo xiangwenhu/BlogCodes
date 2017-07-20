@@ -1,0 +1,48 @@
+
+html,body,.container{
+    height: 100%;
+    width: 100% ;
+    color: #FFF;
+    background: #171716;
+    opacity: 0.9   
+}
+.container{
+    display: flex;
+    flex-direction: column
+}
+.header,.footer {
+    flex: 0 0 3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(to right,#171716,#000)
+}
+.content {
+    flex: 1 1 auto;
+    display: flex;
+}
+
+.content .left{
+    flex: 0 0 2rem
+}
+.content .main{
+    flex: 1 1 auto
+}
+
+.content .right{
+    padding: 0 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex: 0 0 5rem;
+    border-left:#AAA solid 0.1rem
+}
+
+nav a {
+    display: inline-block;
+    line-height: 2.2rem;
+    letter-spacing: 0.1rem
+}
+nav a:first-child{
+    letter-spacing: 1rem
+}

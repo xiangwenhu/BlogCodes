@@ -1,0 +1,44 @@
+<!DOCTYPE>
+<html>
+
+<head></head>
+
+<body>
+
+
+    <script type="text/javascript">
+        var ls = new Proxy(localStorage, {
+            get: function (target, key, receiver) {
+                var val = Reflect.get(target, key, receiver)
+                return val && JSON.parse(val)
+            },
+            set: function (target, key, value, receiver) {
+
+                var evt = document.createEvent('StorageEvent');
+                evt.initStorageEvent('storage', false, false, key, window.localStorage.getItem(key), value, window.location.href, window.localStorage);
+                window.dispatchEvent(evt);
+
+                return Reflect.set(target, key, value && JSON.stringify(value), receiver)
+
+            },
+            deleteProperty: function (target, key) {
+
+                var evt = document.createEvent('StorageEvent');
+                evt.initStorageEvent('storage', false, false, key, window.localStorage.getItem(key), null, window.location.href, window.localStorage);
+                window.dispatchEvent(evt)
+
+                Reflect.deleteProperty(target, key)
+            }
+        })
+
+
+        window.addEventListener('storage', function (e) {
+            console.log(e)
+        })
+
+        ls.a = 2
+        delete ls.a
+    </script>
+</body>
+
+</html>

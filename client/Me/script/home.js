@@ -2,7 +2,8 @@ let _contents = ['home', 'works', 'technology', 'tools', 'contact'].map(v => ({
     el: $.query('.' + v),
     in: false,
     selector: v
-})), _menus = $.queryAll('.right nav a'), scrollDown = true
+})), _menus = $.queryAll('.right nav a'), scrollDown = true,
+    nav = $.query('.right nav')
 
 if (document.addEventListener) {
     document.addEventListener('DOMMouseScroll', mouseScroll, false);
@@ -19,13 +20,20 @@ function mouseScroll(e) {
 
 window.onscroll = function () {
     //第一次进入的动画
-    tabAnimate();
+    tabAnimate()
     //滚动时切换菜单
-    changeTab();
+    changeTab()
 }
 window.onresize = function () {
 
 }
+
+nav.addEventListener('click', function (ev) {
+    var el = ev.target, index = el.getAttribute('data-index')
+    if (index) {
+        _contents[~~index].el.scrollIntoView()
+    }
+})
 
 // 首次进入的童话效果
 var tabAnimate = function () {
@@ -45,7 +53,6 @@ var tabAnimate = function () {
 
 // 滚动的时候切换Tab
 var changeTab = function () {
-    console.log(scrollDown)
     // 往下滚动，检查最后一个匹配的
     if (scrollDown) {
         _contents.forEach((m, index) => {
@@ -62,6 +69,7 @@ var changeTab = function () {
         }
 
     } else {
+        // 往上滚动，反过来检查
         var scrollTop = $.scrollTop
         for (var i = _contents.length - 1; i >= 0; i--) {
             var m = _contents[i]

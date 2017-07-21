@@ -10,23 +10,14 @@ if (document.addEventListener) {
 window.onmousewheel = document.onmousewheel = mouseScroll
 
 function mouseScroll(e) {
-    if (e.wheelDelta) {  //判断浏览器IE，谷歌滑轮事件               
-        if (e.wheelDelta > 0) { //当滑轮向上滚动时  
-            scrollDown = false
-        } else if (e.wheelDelta < 0) { //当滑轮向下滚动时  
-            scrollDown = true
-        }
+    if (e.wheelDelta) {  //判断浏览器IE，谷歌滑轮事件      
+        scrollDown = e.wheelDelta < 0
     } else if (e.detail) {  //Firefox滑轮事件  
-        if (e.detail > 0) { //当滑轮向上滚动时  
-            scrollDown = false
-        } else if (e.detail < 0) { //当滑轮向下滚动时  
-            scrollDown = true
-        }
+        scrollDown = e.detail > 0
     }
 }
 
 window.onscroll = function () {
-    console.log(scrollDown)
     //第一次进入的动画
     tabAnimate();
     //滚动时切换菜单
@@ -53,7 +44,8 @@ var tabAnimate = function () {
 }
 
 // 滚动的时候切换Tab
-var changeTab = function (down) {
+var changeTab = function () {
+    console.log(scrollDown)
     // 往下滚动，检查最后一个匹配的
     if (scrollDown) {
         _contents.forEach((m, index) => {

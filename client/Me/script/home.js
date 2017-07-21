@@ -2,21 +2,17 @@ let _contents = ['home', 'works', 'technology', 'tools', 'contact'].map(v => ({
     el: $.query('.' + v),
     in: false,
     selector: v
-})), _menus = $.queryAll('.right nav a'), scrollDown = true,
-    nav = $.query('.right nav')
+})), scrollDown = true
+
+let el_menus = $.queryAll('.right nav a'),
+    el_nav = $.query('.right nav'),
+    el_fullScreen = $.query('.header .fullScreen')
+
 
 if (document.addEventListener) {
     document.addEventListener('DOMMouseScroll', mouseScroll, false);
 }
 window.onmousewheel = document.onmousewheel = mouseScroll
-
-function mouseScroll(e) {
-    if (e.wheelDelta) {  //判断浏览器IE，谷歌滑轮事件      
-        scrollDown = e.wheelDelta < 0
-    } else if (e.detail) {  //Firefox滑轮事件  
-        scrollDown = e.detail > 0
-    }
-}
 
 window.onscroll = function () {
     //第一次进入的动画
@@ -24,14 +20,26 @@ window.onscroll = function () {
     //滚动时切换菜单
     changeTab()
 }
-window.onresize = function () {
 
-}
-
-nav.addEventListener('click', function (ev) {
+el_nav.addEventListener('click', function (ev) {
     var el = ev.target, index = el.getAttribute('data-index')
     if (index) {
+        var acEl = document.querySelector('.right nav a.active')
+        if (acEl) {
+            acEl.classList.remove('active')
+        }
         _contents[~~index].el.scrollIntoView()
+        _contents[~~index].el.classList.add('active')
+    }
+})
+
+el_fullScreen.addEventListener('click', function () {
+    if (!$.screen.isFullScreen) {
+        $.screen.fullScreen()
+        this.innerText = '退出全屏'
+    } else {
+        this.innerText = '全屏'
+        $.screen.exitFullscreen()
     }
 })
 
@@ -61,11 +69,11 @@ var changeTab = function () {
                 if (acEl) {
                     acEl.classList.remove('active')
                 }
-                _menus[index].classList.add('active')
+                el_menus[index].classList.add('active')
             }
         })
         if (!document.querySelector('.right nav a.active')) {
-            _menus[0].classList.add('active')
+            el_menus[0].classList.add('active')
         }
 
     } else {
@@ -78,11 +86,19 @@ var changeTab = function () {
                 if (acEl) {
                     acEl.classList.remove('active')
                 }
-                _menus[i].classList.add('active')
+                el_menus[i].classList.add('active')
             }
         }
         if (!document.querySelector('.right nav a.active')) {
-            _menus[0].classList.add('active')
+            el_menus[0].classList.add('active')
         }
+    }
+}
+
+function mouseScroll(e) {
+    if (e.wheelDelta) {  //判断浏览器IE，谷歌滑轮事件      
+        scrollDown = e.wheelDelta < 0
+    } else if (e.detail) {  //Firefox滑轮事件  
+        scrollDown = e.detail > 0
     }
 }

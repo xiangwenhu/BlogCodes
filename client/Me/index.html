@@ -3,20 +3,40 @@
 
 <head>
     <title>我的主页</title>
-    <link type="text/css" rel="Stylesheet" href="css/common.css" />
-    <link type="text/css" rel="Stylesheet" href="css/style.css" />
+    <link type="text/css" rel="Stylesheet" href="/Me/css/common.css" />
+    <link type="text/css" rel="Stylesheet" href="/Me/css/style.css" />
     <meta charset="utf-8" />
     <meta name="keywords" content="胡祥文的个人主页">
 </head>
 
 <body>
     <div class="container">
-        <header class="header">我的主页</header>
+        <header class="header">
+            <div class="seat"></div>
+            <div class="fullScreen">全屏</div>
+        </header>
         <section class="content">
             <section class="left"></section>
             <section class="main">
                 <section class="home">
-                    <h3>首页</h3>
+                    <div>
+                        <h1 class="title">我是云</h1>
+                        <h2 class="sub-title">相信自己的价值 让美好的事情发生</h2>
+                    </div>
+                    <p style="height:6rem"></p>
+                    <p>简单的自我介绍。</p>
+                    <p>原籍湖南，现在户口在河北石家庄。</p>
+                    <p>03年大学统招上了中国矿业大学（北京校区），学习的专业为计算机科学与技术，07年毕业，因为感情问题，08年才开始工作。</p>
+                    <p>第一份工作在上地七街，学了一点点C++,后来直接转到.NET,陆续接触SQL,SharePoint。</p>
+                    <p>之后的工作很大程度都是和SharePoint相关，当然期间也接触Azure,前端,PHP。</p>
+                    <p>14年考取二级建造师，培训班总分第一名。</p>
+                    <p>上一家公司是一家外企，当时主要做SiteCore相关的开发，这个期间对前端燃烧了热情。在此获得闪亮明星和公司16年中国区最佳个人证书。</p>
+                    <p>自学了两个月后，入职现在的公司做专职前端，入职3个月左右，负责产品PC和wap的前端。16年初和底分别对PC和wap进行了重构。</p>
+                    <p>现在主要关注的技术有react/react-native/vue, web component, PWA相关技术，webpack/gulp, ES6/ES7， html5, CSS3, web API(indexedDB, MediaRecorder,
+                        webRTC), web App等等</p>
+                    <p>兴趣爱好：动漫，游戏，买书看书，敲代码，旅游</p>
+                    <p>座右铭:喜欢就好</p>
+                    <p></p>
                 </section>
                 <hr>
                 <section class="works">
@@ -90,18 +110,24 @@
             </section>
             <section class="right">
                 <nav>
-                    <a data-index='0' class="active" href="javascript:void(0)">首页</a>
-                    <a data-index='1' href="javascript:void(0)">作品集</a>
-                    <a data-index='2' href="javascript:void(0)">技术栈</a>
-                    <a data-index='3' href="javascript:void(0)">小工具</a>
-                    <a data-index='4' href="javascript:void(0)">联系我</a>
+                    <ul>
+                        <li>
+                            <a data-index='0' class="active" href="javascript:void(0)">
+                               首页
+                            </a>
+                        </li>
+                        <li><a data-index='1' href="javascript:void(0)">作品集</a> </li>
+                        <li><a data-index='2' href="javascript:void(0)">技术栈</a> </li>
+                        <li><a data-index='3' href="javascript:void(0)">小工具</a> </li>
+                        <li><a data-index='4' href="javascript:void(0)">联系我</a> </li>
+                    </ul>
                 </nav>
             </section>
         </section>
         <footer class="footer">版权所有：2017-2020</footer>
     </div>
-    <script src="script/util.js"></script>
-    <script src="script/home.js"></script>
+    <script src="/Me/script/util.js"></script>
+    <script src="/Me/script/home.js"></script>
 </body>
 
 </html>

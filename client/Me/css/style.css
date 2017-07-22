@@ -44,6 +44,12 @@ html,body{
     font-weight: 600
 }
 
+.main section{
+    margin-top: 2rem;
+    border: 0.01px solid #999;
+    border-radius: 1rem;
+    padding: 1rem 2rem;
+}
 
 
 /* 右边以及菜单：Begin  */
@@ -59,9 +65,7 @@ html,body{
     font-size: 2rem;
     color: #769b7a
 }
-.right nav a:first-child{
-    letter-spacing: 1rem
-}
+
 .right nav a:hover, nav a.active {
     color: #FFF;
 }
@@ -94,7 +98,94 @@ html,body{
     text-align: center;
 }
 
+.home p{
+    letter-spacing: 0.1rem
+}
+
 /* home: end */
+
+
+
+/* works: Begin */
+    .work-title{
+        margin:3rem auto 2rem;
+        text-align: center;
+        font-size: 2rem;
+    }
+    .work-desc{
+        text-align: center;
+        margin: 2rem auto;
+    }
+
+    .work-previews{
+        display: flex;
+        flex-wrap:wrap;
+    }
+
+    .work-previews-single{
+        overflow: hidden;
+        text-align: center;
+    }
+
+    .work-previews div {
+        flex: 1 1 25% ;
+        text-align: center     
+    }
+
+    .works img{
+        border: 0.01rem solid #EEE;
+        border-radius: 1rem
+    }
+
+/* works: End */
+
+
+/* skill:begin */
+
+    .skill-level-desc{
+        margin-top:2rem;
+        display: flex;  
+        flex-wrap:nowrap;      
+    }
+    .skill-level-color{
+        width: 2rem;
+        display: block;
+        height: 2rem;
+    }
+    .skill-level-title{
+        width: 4rem;     
+        height: 2rem;
+    }
+
+     .skill-level-desc-item{
+        width: 25%;
+        line-height: 2rem;
+     }
+
+    .skill-item{
+        display: flex;
+        margin-top: 1rem
+    }
+
+    .skill-title, .skill-level{
+        height: 1.6rem;
+        line-height: 1.6rem;
+        font-size: 1.6rem;
+    }
+
+    .skill-title{
+        width: 10rem;
+    }
+
+    .skill-level{
+        border: 0.1rem solid #FFF;
+        width: 20rem;     
+        text-align: center;
+    }
+
+/* skill:end */
+
+
 
  
 .contact

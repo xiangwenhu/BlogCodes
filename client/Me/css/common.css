@@ -40,4 +40,42 @@ p{
     font-size: 1.6rem;
     margin: 0.2rem auto;
 }
+
+/* 橙，黄，蓝,青 ,绿*/
+
+.level1{
+    background: -webkit-linear-gradient(to right, blue, blue);
+    background: -moz-linear-gradient(to right, blue, blue);
+    background: -o-linear-gradient(to right, blue, blue);
+    background: linear-gradient(to right, blue, blue);
+}
+
+.level2{
+    background: -webkit-linear-gradient(to right, cyan, cyan);
+    background: -moz-linear-gradient(to right, cyan, cyan);
+    background: -o-linear-gradient(to right, cyan, cyan);
+    background: linear-gradient(to right, cyan, cyan);
+} 
+
+.level3{
+    background: -webkit-linear-gradient(to right, orange, orange);
+    background: -moz-linear-gradient(to right, orange, orange);
+    background: -o-linear-gradient(to right, orange, orange);
+    background: linear-gradient(to right, orange, orange);
+}
+
+.level4{
+    background: -webkit-linear-gradient(to right, yellow, yellow);
+    background: -moz-linear-gradient(to right, yellow, yellow);
+    background: -o-linear-gradient(to right, yellow, yellow);
+    background: linear-gradient(to right, yellow, yellow);
+}  
+
+.level5{
+    background: -webkit-linear-gradient(to right, green, green);
+    background: -moz-linear-gradient(to right, green, green);
+    background: -o-linear-gradient(to right, green, green);
+    background: linear-gradient(to right, green, green);
+}
+   
        

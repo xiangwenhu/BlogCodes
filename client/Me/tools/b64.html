@@ -1,0 +1,187 @@
+<!DOCTYPE>
+<html>
+
+<head>
+    <title>base64转码</title>
+    <style>
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            width: 100%
+        }
+
+        #container {
+            display: flex;
+            padding: 3rem;
+        }
+
+        .right,
+        .left {
+            border: 0.1rem solid #CCC;
+            height: 40rem;
+            overflow: auto;
+            flex: 1 1 50%;
+            position: relative
+        }
+
+        .center {
+            flex: 0 0 6rem;
+            display: flex;
+            justify-content: center;
+            flex-direction: column;
+            align-items: center
+        }
+
+        .center .op {
+            line-height: 2rem;
+            height: 2rem;
+            font-size: 1.6rem;
+            margin: 0.2rem;
+            width: 4rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div id='container'>
+        <div contenteditable='true' class='left'></div>
+        <div class="center">
+            <input class="op" type="button" value="CLS" />
+            <input class="op" type="button" value="=>" />
+            <input class="op" type="button" value="<=" />
+        </div>
+        <div contenteditable='true' class="right"></div>
+    </div>
+    <script src="../script/util.js"></script>
+    <script>
+        var el_ops = $.queryAll('.center .op'),
+            el_left = $.query('.left'),
+            el_right = $.query('.right'),
+            bs = '请输入需要转码为base64的内容，或者拖拽单个文件',
+            bt = '请输入需要反转码base64的内容',
+            whiteList = ['application/javascript', 'text/plain']
+
+
+
+        el_left.innerText = bs
+        el_right.innerText = bt
+
+        el_ops[0].addEventListener('click', function () {
+            el_left.innerText = bs
+            el_right.innerText = bt
+        })
+
+        el_ops[1].addEventListener('click', function (ev) {
+            try {
+                if (el_left.innerText === bs) {
+                    return
+                }
+                el_right.innerText = $.toBase64(el_left.innerText)
+            } catch (err) {
+                alert(err)
+            }
+        })
+        el_ops[2].addEventListener('click', function (ev) {
+            try {
+                if (el_right.innerText === bt) {
+                    return
+                }
+                el_left.innerText = $.toUtf8(el_right.innerText)
+            } catch (err) {
+                alert(err)
+            }
+        })
+
+        el_left.addEventListener('focus', function () {
+            if (this.innerText === bs) {
+                this.innerText = ''
+            }
+        })
+        el_left.addEventListener('blur', function () {
+            if (this.querySelector('img') == null && this.innerText === '') {
+                this.innerText = bs
+            }
+        })
+
+        el_right.addEventListener('focus', function () {
+            if (this.innerText === bt) {
+                this.innerText = ''
+            }
+        })
+        el_right.addEventListener('blur', function () {
+            if (this.innerText === '') {
+                this.innerText = bt
+            }
+        })
+
+        el_left.addEventListener("drop", function (e) {
+            e.stopPropagation();
+            e.preventDefault();
+
+            handleFiles(e.dataTransfer.files)
+
+
+        }, false);
+
+        var handleFiles = function (files) {
+            if (!files) {
+                alert('未拖拽文件')
+                return
+            }
+            if (files.length > 1) {
+                alert('只支持单个文件转换')
+                return
+            }
+            for (var i = 0; i < files.length; i++) {
+                //检查文件类型和大小
+                var file = files[i], checkStatus = checkTypes(file)
+                if (checkStatus.status && checkSize(file)) {
+                    // 如果是图片
+                    if (checkStatus.image) {
+                        $.f.readAsDataURL(file).then(r => {
+                            el_left.innerHTML = '<img alt="" src="' + r + '" >'
+                            el_right.innerText = r
+                        })
+                    } else { //如果是文本
+                        $.f.readAsText(file).then(r => {
+                            el_left.innerText = r
+                            el_right.innerText = $.toBase64(r)
+                        })
+                    }
+                }
+            }
+        }
+
+        // text/plain ,image/jpeg
+        function checkTypes(file) {
+            if (file.type === 'text/plain') {
+                return {
+                    status: true,
+                    image: false
+                }
+            }
+            if (file.type.indexOf('image') === 0) {
+                return {
+                    status: true,
+                    image: true
+                }
+            }
+            alert('只支持 ' + whiteList.join(',') + '和图片')
+            return { status: false }
+        }
+
+
+        function checkSize(file) {
+            var size = file.size / 1024
+            if (size > 200) {
+                alert('文件最大上限为200KB,当前文件大小为' + size.toFixed(1) + 'KB')
+                return false
+            }
+            return true
+        }
+    </script>
+</body>
+
+</html>

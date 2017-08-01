@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>css3 cal</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box
+        }
+
+        .header {
+            background: red;
+            height: 100px;
+        }
+
+        .footer {           
+            height: 100px;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            box-sizing: border-box;
+            background-color: palevioletred
+        }
+
+        .header,
+        .footer,
+        .left,
+        .content,
+        .right {
+            border: 10px solid black;
+            box-sizing: border-box
+        }
+
+        .left {
+            margin: 20px 0;
+            background: green;
+            width: 100px;
+        }
+
+        .content {
+            margin: 20px 20px;
+            background-color: silver;
+            width: calc(100% - 240px);
+            width: -webkit-calc(100% - 240px);
+            width: -moz-cal(100%-240px);
+        }
+
+        .right {
+            margin: 20px 0;
+            background-color: yellow;
+            width: 100px;
+        }
+
+        .left,
+        .content,
+        .right {
+            float: left;
+            height: calc(100% - 240px);
+            height: -webkit-calc(100% - 240px);
+            height: -moz-cal(100%-240px);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">header</div>
+    <div class="left">left</div>
+    <div class="content">content</div>
+    <div class="right">right</div>
+    <div class="footer">footer</div>
+</body>
+
+</html>

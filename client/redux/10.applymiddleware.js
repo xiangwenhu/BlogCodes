@@ -1,11 +1,11 @@
 /* 简单示例 */
 
-let { createStore } = self.Redux
+let { createStore, applyMiddleware } = self.Redux
 
 
 let todoList = []
 
-let couterReducer = function (state = todoList, action) {
+let todoReducer = function (state = todoList, action) {
     switch (action.type) {
         case 'add':
             return [...state, action.todo]
@@ -16,10 +16,26 @@ let couterReducer = function (state = todoList, action) {
     }
 }
 
-let store = createStore(couterReducer),
+let logger = ({ dispatch, getState }) => next => action => {
+    // 传递前, 执行的代码
+    let result = next(action)
+    // 传递完, 执行的代码
+    return result
+}
+
+let logger1 = ({ dispatch, getState }) => next => action => {
+    // 传递前, 执行的代码
+    let result = next(action)
+    // 传递完, 执行的代码
+    return result
+}
+
+let store = createStore(todoReducer, applyMiddleware(logger, logger1)),
     subscribe1Fn = function () {
         console.log(store.getState())
     }
+
+
 
 
 // 订阅
@@ -33,18 +49,6 @@ store.dispatch({
     }
 })
 
-store.dispatch({
-    type: 'add',
-    todo: {
-        id: 2,
-        content: '吃饭睡觉'
-    }
-})
-
-store.dispatch({
-    type: 'delete',
-    id: 2
-})
 
 // 取消订阅
 sub()

@@ -1,8 +1,8 @@
 
 let { createStore, bindActionCreators, combineReducers } = self.Redux
 
-//默认state
-let todoList = [], couter = 0
+//默认值
+let todoList = [{ 'id': 999 }], couter = 1
 // reducer
 let todoReducer = function (state = todoList, action) {
     switch (action.type) {
@@ -25,10 +25,14 @@ let todoReducer = function (state = todoList, action) {
         }
     }
 
-var reducer = combineReducers({ todoReducer, couterReducer })
 
+// 合并recuder
+var reducer = combineReducers({ todoReducer, couterReducer })
 //创建store
-let store = createStore(reducer)
+let store = createStore(reducer,{
+    todoReducer: todoList,
+    couterReducer: couter
+})
 
 //订阅
 function subscribe1Fn() {

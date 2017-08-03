@@ -19,14 +19,39 @@ import compose from './compose'
 export default function applyMiddleware(...middlewares) {
   return (createStore) => (reducer, preloadedState, enhancer) => {
     const store = createStore(reducer, preloadedState, enhancer)
-    let dispatch = store.dispatch
+    let dispatch = store.dispatch  // 存旧的dispatch
     let chain = []
 
+      /*
+      中间件标准格式
+      let logger1 = ({ dispatch, getState }) => next => action => {
+        ...     
+        let result = next(action)
+        ...
+        return result
+      }
+      */
+
+     /*
+      构建参数 ({dispatch, getState})
+     */
     const middlewareAPI = {
       getState: store.getState,
       dispatch: (action) => dispatch(action)
     }
+
+    /*
+      middleware(middlewareAPI)之后是这样的格式 
+      let m =  next => action => {
+        ...     
+        let result = next(action)
+        ...
+        return result
+      }
+    */
     chain = middlewares.map(middleware => middleware(middlewareAPI))
+
+    //改写store.dispacth
     dispatch = compose(...chain)(store.dispatch)
 
     return {

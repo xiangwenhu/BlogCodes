@@ -18,8 +18,10 @@ let todoReducer = function (state = todoList, action) {
 
 let logger = ({ dispatch, getState }) => next => action => {
     // 传递前, 执行的代码
+    console.log('logger:before next:' , getState())
     let result = next(action)
     // 传递完, 执行的代码
+    console.log('logger:after next:' , getState())
     return result
 }
 
@@ -53,7 +55,8 @@ store.dispatch({
 // 取消订阅
 sub()
 
+/*
 console.log('取消订阅后：')
 store.dispatch({
     type: 'increase'
-})
+}) */

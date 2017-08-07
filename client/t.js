@@ -1,31 +1,94 @@
-export const ActionTypes = {
-    INIT: '@@redux/INIT'
-}
-export default function createStore(reducer, preloadedState, enhancer) {
-    // 初始化参数
-    let currentReducer = reducer      // 整个reducer
-    let currentState = preloadedState //当前的state, getState返回的值就是他，
-    let currentListeners = []         // 当前的订阅，搭配 nextListeners
-    let nextListeners = currentListeners  //下一次的订阅 ,搭配currentListeners
-    let isDispatching = false  //是否处于 dispatch action 状态中
-    
-    // 内部方法
-    function ensureCanMutateNextListeners() { }  // 确保currentListeners 和 nextListeners 是不同的引用
-    function getState() { }    // 获得当前的状态，返回的就是currentState
-    function subscribe(listener) { }  //订阅监听，返回一个函数，执行该函数，取消监听
-    function dispatch(action) { }    // dispacth action
-    function replaceReducer(nextReducer) { }  // 替换 reducer
-    function observable() { }   //不知道哈哈
-    
-    //初始化state
-    dispatch({ type: ActionTypes.INIT })
-   
-    //返回方法
-    return {
-        dispatch,
-        subscribe,
-        getState,
-        replaceReducer,
-        [$$observable]: observable
+// thunk 中间件
+let thunk = function ({ dispatch, getState }) {
+    return function (next) {
+        return function (action) {
+            if (typeof action === 'function') {
+                return action(dispatch, getState)
+            }
+            return next(action)
+        }
     }
 }
+// logger中间件
+let logger = function ({ dispatch, getState }) {
+    return function (next) {
+        return function (action) {
+            console.log('next:之前state', getState())
+            let result = next(action)
+            console.log('next:之前state', getState())
+            return result
+        }
+    }
+}
+
+middleware(middlewareAPI)之后 
+
+thunk = function (next) {
+    return function (action) {
+        if (typeof action === 'function') {
+            return action(dispatch, getState)
+        }
+        return next(action)
+    }
+}
+
+logger = function (next) {
+    return function (action) {
+        console.log('next:之前state', getState())
+        let result = next(action)
+        console.log('next:之前state', getState())
+        return result
+    }
+}
+
+
+compose(...chain)  也就是  funcs.reduce((a, b) => (...args) => a(b(...args))), 此时 funcs = [thunk, logger]
+
+var result = function (...args) {
+    thunk(logger(...args))
+}
+这里要理解rest参数和扩展运算符
+这对情侣的作用就是原来有多少个参数传入，我到执行的时候又分解成原来的参数
+第一个...args是把传入存入名为args的数组里面，
+第二个...args是把数组又逆向还原为 a,b,c的形式
+
+logger本身只需要一个参数next，看外围的调用  compose(...chain)(store.dispatch)，logger最里面的next就等于store.dispatch 
+
+
+l = logger(...args)  ==   function (action) {
+                    console.log('next:之前state', getState())
+                    let result = next(action)
+                    console.log('next:之前state', getState())
+                    return result
+                    }
+
+
+thunk(logger(...args)) == thunk(l) ==  function (action) {
+                                        if (typeof action === 'function') {
+                                            return action(dispatch, getState)
+                                        }
+                                        return function (action) {
+                                            console.log('next:之前state', getState())
+                                            let result = next(action) // 调用的第一个参数
+                                            console.log('next:之前state', getState())
+                                            return result
+                                        }
+                                      }
+
+
+ compose(...chain)(store.dispatch)
+
+ 
+thunk(logger(...args)) == thunk(l) ==  function (action) {
+                                        if (typeof action === 'function') {
+                                            return action(dispatch, getState)
+                                        }
+                                        return function (action) {
+                                            console.log('next:之前state', getState())
+                                            let result = store.dispatch(action) 
+                                            console.log('next:之前state', getState())
+                                            return result
+                                        }
+                                      }
+
+当然因为闭包的原因， getState, dispatch 都是可以直接调用的

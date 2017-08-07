@@ -1,19 +1,16 @@
-
 // thunk 中间件
 let thunk = ({ dispatch, getState }) => next => action => {
     if (typeof action === 'function') {
         return action(dispatch, getState)
     }
-    next(action)
+    return next(action)
 }
 // logger中间件
 let logger = ({ dispatch, getState }) => next => action => {
-    //console.log('next:之前action', action)
     console.log('next:之前state', getState())
     let result = next(action)
-    //console.log('next:之后action', action)
     console.log('next:之前state', getState())
-    //result
+    return result
 }
 
 let { createStore, applyMiddleware } = self.Redux

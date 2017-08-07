@@ -17,7 +17,7 @@ import compose from './compose'
  * @returns {Function} A store enhancer applying the middleware.
  */
 export default function applyMiddleware(...middlewares) {
-  return (createStore) => (reducer, preloadedState, enhancer) => {
+  return (createStore) => (reducer, preloadedState, enhancer) => {  // createStore就是redux公布的方法creatStore，
     const store = createStore(reducer, preloadedState, enhancer)
     let dispatch = store.dispatch  // 存旧的dispatch
     let chain = []
@@ -31,15 +31,12 @@ export default function applyMiddleware(...middlewares) {
         return result
       }
       */
-
-     /*
-      构建参数 ({dispatch, getState})
-     */
+     
+    //构建参数 ({dispatch, getState})     
     const middlewareAPI = {
       getState: store.getState,
       dispatch: (action) => dispatch(action)
     }
-
     /*
       middleware(middlewareAPI)之后是这样的格式 
       let m =  next => action => {
@@ -51,9 +48,10 @@ export default function applyMiddleware(...middlewares) {
     */
     chain = middlewares.map(middleware => middleware(middlewareAPI))
 
-    //改写store.dispacth
+    //生成新的dispatch
     dispatch = compose(...chain)(store.dispatch)
-
+    
+    // 返回改写过disptach的store
     return {
       ...store,
       dispatch

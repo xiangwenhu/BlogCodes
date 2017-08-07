@@ -1,10 +1,23 @@
-/* 简单示例 */
+
+// thunk 中间件
+let thunk = ({ dispatch, getState }) => next => action => {
+    if (typeof action === 'function') {
+        return action(dispatch, getState)
+    }
+    next(action)
+}
+// logger中间件
+let logger = ({ dispatch, getState }) => next => action => {
+    //console.log('next:之前action', action)
+    console.log('next:之前state', getState())
+    let result = next(action)
+    //console.log('next:之后action', action)
+    console.log('next:之前state', getState())
+    //result
+}
 
 let { createStore, applyMiddleware } = self.Redux
-
-
-let todoList = []
-
+let todoList = [] // 默认值
 let todoReducer = function (state = todoList, action) {
     switch (action.type) {
         case 'add':
@@ -15,48 +28,34 @@ let todoReducer = function (state = todoList, action) {
             return state
     }
 }
-
-let logger = ({ dispatch, getState }) => next => action => {
-    // 传递前, 执行的代码
-    console.log('logger:before next:' , getState())
-    let result = next(action)
-    // 传递完, 执行的代码
-    console.log('logger:after next:' , getState())
-    return result
+let addAsync = content => (dispatch) => {
+    setTimeout(function () {
+        dispatch({
+            type: 'add',
+            todo: {
+                id: new Date().getTime(),
+                content
+            }
+        })
+    }, 1000)
 }
 
-let logger1 = ({ dispatch, getState }) => next => action => {
-    // 传递前, 执行的代码
-    let result = next(action)
-    // 传递完, 执行的代码
-    return result
-}
-
-let store = createStore(todoReducer, applyMiddleware(logger, logger1)),
+//let store = createStore(todoReducer, applyMiddleware(thunk, logger)),
+let store = applyMiddleware(thunk, logger)(createStore)(todoReducer),
     subscribe1Fn = function () {
         console.log(store.getState())
     }
 
-
-
-
 // 订阅
 let sub = store.subscribe(subscribe1Fn)
 
-store.dispatch({
+let asyncDisR = store.dispatch(addAsync('异步添加的todo哦'))
+let disR = store.dispatch({
     type: 'add',
     todo: {
         id: 1,
         content: '学习redux'
     }
 })
+console.log('等待异步action....')
 
-
-// 取消订阅
-sub()
-
-/*
-console.log('取消订阅后：')
-store.dispatch({
-    type: 'increase'
-}) */

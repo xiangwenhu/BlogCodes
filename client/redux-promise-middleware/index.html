@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Redux Promise Middleware</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <button id="load">Get Post</button>
+    <hr />
+    <div id="mount" />
+    <script src="../redux/redux.js"></script>
+    <script src="ReduxPromiseMiddleware.js"></script>
+    <script src="basicUsage.js"></script>
+
+    <script>
+        var p = new Promise((resolve, reject) => {
+            console.log('setTimeout start')
+            setTimeout(() => {
+                console.log('setTimeout ended')
+                return reject(3000)
+            }, 3000)
+        })
+        let p2 = p.then((value = null) => {
+            console.log('p then in the way')
+            return ({ value, type: 'FULFILLED' })
+        })
+        let p3 = p2.then((action) => {
+            console.log('p2 then resolve fun', action)
+        }, (action) => {
+            console.log('p2 then reject fun', action)
+            return ({ type: 'REJECTED' })
+        })
+
+        p3.then((r) => {
+            console.log('p3 then resolve fun', r)
+            return p2
+        }, (r) => {
+            console.log('p3 then reject fun', r)
+            return p2
+        })
+    </script>
+</body>
+
+</html>

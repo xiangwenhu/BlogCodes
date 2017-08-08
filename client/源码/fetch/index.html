@@ -8,25 +8,12 @@
 </head>
 
 <body>
-    <script src="/源码/fetch/fetch.js"></script>
+    <script src="/源码/fetch/es6-promise.js"></script>
     <script>
-        var req = new Request('/源码/fetch/fetch.js')
-
-        fetch(req, {
-            mode: 'same-origin',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        }).then(res => {
-            for (let header of res.headers) {
-                console.log(header)
-                console.log(1111111111,res.headers.iterator)
-            }
-            return res.text()
-        }).then(content => {
-            console.log('complete')
-        })
+        self.Promise = self.ES6Promise
     </script>
+    <script src="/源码/fetch/fetch.js"></script>
+    <script src="/源码/fetch/index.js"></script>
 </body>
 
 </html>

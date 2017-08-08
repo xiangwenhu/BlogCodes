@@ -1,4 +1,4 @@
-(function(self) {
+(function (self) {
   'use strict';
 
   //如果自身支持fetch，直接返回原生的fetch
@@ -10,11 +10,11 @@
   var support = {
     searchParams: 'URLSearchParams' in self, // queryString 处理函数，https://developer.mozilla.org/en-US/docs/Web/API/URLSearchParams，http://caniuse.com/#search=URLSearchParams
     iterable: 'Symbol' in self && 'iterator' in Symbol,  // Symbol(http://es6.ruanyifeng.com/#docs/symbol)E6新数据类型，表示独一无二的值 和 iterator枚举
-    blob: 'FileReader' in self && 'Blob' in self && (function() {
+    blob: 'FileReader' in self && 'Blob' in self && (function () {
       try {
         new Blob()
         return true
-      } catch(e) {
+      } catch (e) {
         return false
       }
     })(),  // Blob 和 FileReader
@@ -37,12 +37,12 @@
     ]
 
     // 检查是不是DataView,DataView是来读写ArrayBuffer的 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/DataView
-    var isDataView = function(obj) {
+    var isDataView = function (obj) {
       return obj && DataView.prototype.isPrototypeOf(obj)
     }
 
     // 检查是不是有效的ArrayBuffer view，ArrayBuffer.isView(new ArrayBuffer(10)) 为false, https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/ArrayBuffer/isView
-    var isArrayBufferView = ArrayBuffer.isView || function(obj) {
+    var isArrayBufferView = ArrayBuffer.isView || function (obj) {
       return obj && viewClasses.indexOf(Object.prototype.toString.call(obj)) > -1
     }
   }
@@ -72,14 +72,17 @@
   // 枚举器, 供for...of消费 ,http://es6.ruanyifeng.com/#docs/iterator
   function iteratorFor(items) {
     var iterator = {
-      next: function() {
+      next: function () {
         var value = items.shift()
-        return {done: value === undefined, value: value}
+        return { done: value === undefined, value: value }
       }
     }
-
+    // 如果不支持 iterable，依旧是可以通过next()挨个获得数据的
     if (support.iterable) {
-      iterator[Symbol.iterator] = function() {
+      // 默认 Iterator,
+      // for...of,解构赋值,扩展运算符,yield*,Map(), Set(), WeakMap(), WeakSet(),Promise.all(),Promise.race()都会调用默认Iterator
+      // 个人觉得可以判断  items[Symbol.iterator],如果是函数，直接返回即可，因为已经自带了默认Iterator
+      iterator[Symbol.iterator] = function () {
         return iterator
       }
     }
@@ -87,103 +90,119 @@
     return iterator
   }
 
+  // 封装的 Headers
   function Headers(headers) {
-    this.map = {}
+    this.map = {} // headers 最终存储的地方
 
-    if (headers instanceof Headers) {
-      headers.forEach(function(value, name) {
+    if (headers instanceof Headers) { // 如果已经是 Headers的实例，复制键值
+      headers.forEach(function (value, name) {
         this.append(name, value)
-      }, this)
-    } else if (Array.isArray(headers)) {
-      headers.forEach(function(header) {
+      }, this) // this修改forEach执行函数上下文为当前上下文，就可以直接调用append方法了
+    } else if (Array.isArray(headers)) { // 如果是数组，[['Content-Type':''],['Referer','']]
+      headers.forEach(function (header) {
         this.append(header[0], header[1])
       }, this)
-    } else if (headers) {
-      Object.getOwnPropertyNames(headers).forEach(function(name) {
+    } else if (headers) { 
+      // 对象  {'Content-Type':'',Referer:''}
+      Object.getOwnPropertyNames(headers).forEach(function (name) {
         this.append(name, headers[name])
       }, this)
     }
   }
 
-  Headers.prototype.append = function(name, value) {
+  // 添加或者追加Header
+  Headers.prototype.append = function (name, value) {
     name = normalizeName(name)
     value = normalizeValue(value)
     var oldValue = this.map[name]
-    this.map[name] = oldValue ? oldValue+','+value : value
+    // 支持 append, 比如 Accept:text/html ，后来 append('Accept','application/xhtml+xml') 那么最终  Accept:'text/html,application/xhtml+xml'
+    this.map[name] = oldValue ? oldValue + ',' + value : value 
   }
-
-  Headers.prototype['delete'] = function(name) {
+ 
+  //删除名为name的Header
+  Headers.prototype['delete'] = function (name) {
     delete this.map[normalizeName(name)]
   }
 
-  Headers.prototype.get = function(name) {
+  //获得名为Name的Header
+  Headers.prototype.get = function (name) {
     name = normalizeName(name)
     return this.has(name) ? this.map[name] : null
   }
-
-  Headers.prototype.has = function(name) {
+  
+  //查询时候有名为name的Header
+  Headers.prototype.has = function (name) {
     return this.map.hasOwnProperty(normalizeName(name))
   }
-
-  Headers.prototype.set = function(name, value) {
+  //设置或者覆盖名为name，值为vaue的Header
+  Headers.prototype.set = function (name, value) {
     this.map[normalizeName(name)] = normalizeValue(value)
   }
-
-  Headers.prototype.forEach = function(callback, thisArg) {
+  //遍历Headers
+  Headers.prototype.forEach = function (callback, thisArg) {
+    //遍历属性   
+    //我觉得也挺不错 Object.getOwnPropertyNames(this.map).forEach(function(name){ callback.call(thisArg, this.map[name], name, this) },this)
     for (var name in this.map) {
-      if (this.map.hasOwnProperty(name)) {
+      //检查是不是自己的属性
+      if (this.map.hasOwnProperty(name)) { 
+        //调用
         callback.call(thisArg, this.map[name], name, this)
       }
     }
   }
-
-  Headers.prototype.keys = function() {
+  
+  // 所有的键
+  Headers.prototype.keys = function () {
     var items = []
-    this.forEach(function(value, name) { items.push(name) })
+    this.forEach(function (value, name) { items.push(name) })
     return iteratorFor(items)
   }
-
-  Headers.prototype.values = function() {
+ // 所有的值
+  Headers.prototype.values = function () {
     var items = []
-    this.forEach(function(value) { items.push(value) })
+    this.forEach(function (value) { items.push(value) })
     return iteratorFor(items)
   }
-
-  Headers.prototype.entries = function() {
+  // 所有的entries,格式是这样 [[name1,value1],[name2,value2]]
+  Headers.prototype.entries = function () {
     var items = []
-    this.forEach(function(value, name) { items.push([name, value]) })
+    this.forEach(function (value, name) { items.push([name, value]) })
     return iteratorFor(items)
   }
-
+  
+  //执行Headers原型默认的Iterator
   if (support.iterable) {
     Headers.prototype[Symbol.iterator] = Headers.prototype.entries
   }
-
+ 
+  //是否已经消费/读取过，如果读取过，会直接到catch或者error处理函数
   function consumed(body) {
     if (body.bodyUsed) {
       return Promise.reject(new TypeError('Already read'))
     }
     body.bodyUsed = true
   }
-
+  
+  // FileReader读取完毕
   function fileReaderReady(reader) {
-    return new Promise(function(resolve, reject) {
-      reader.onload = function() {
+    return new Promise(function (resolve, reject) {
+      reader.onload = function () {
         resolve(reader.result)
       }
-      reader.onerror = function() {
+      reader.onerror = function () {
         reject(reader.error)
       }
     })
   }
 
+  // 读取blob为ArrayBuffer对象，https://www.w3.org/TR/FileAPI/#dfn-filereader
   function readBlobAsArrayBuffer(blob) {
     var reader = new FileReader()
     var promise = fileReaderReady(reader)
     reader.readAsArrayBuffer(blob)
     return promise
   }
-
+  // 读取blob为文本，https://www.w3.org/TR/FileAPI/#dfn-filereader
   function readBlobAsText(blob) {
     var reader = new FileReader()
     var promise = fileReaderReady(reader)
@@ -191,6 +210,7 @@
     return promise
   }
 
+  // ArrayBuffer读为文本
   function readArrayBufferAsText(buf) {
     var view = new Uint8Array(buf)
     var chars = new Array(view.length)
@@ -201,10 +221,12 @@
     return chars.join('')
   }
 
+  //克隆ArrayBuffer
   function bufferClone(buf) {
-    if (buf.slice) {
+    if (buf.slice) {  //支持 slice，直接slice(0)复制，数据基本都是这样复制的
       return buf.slice(0)
-    } else {
+    } else { 
+      //新建填充模式复制
       var view = new Uint8Array(buf.byteLength)
       view.set(new Uint8Array(buf))
       return view.buffer
@@ -214,7 +236,7 @@
   function Body() {
     this.bodyUsed = false
 
-    this._initBody = function(body) {
+    this._initBody = function (body) {
       this._bodyInit = body
       if (!body) {
         this._bodyText = ''
@@ -248,7 +270,7 @@
     }
 
     if (support.blob) {
-      this.blob = function() {
+      this.blob = function () {
         var rejected = consumed(this)
         if (rejected) {
           return rejected
@@ -265,7 +287,7 @@
         }
       }
 
-      this.arrayBuffer = function() {
+      this.arrayBuffer = function () {
         if (this._bodyArrayBuffer) {
           return consumed(this) || Promise.resolve(this._bodyArrayBuffer)
         } else {
@@ -274,7 +296,7 @@
       }
     }
 
-    this.text = function() {
+    this.text = function () {
       var rejected = consumed(this)
       if (rejected) {
         return rejected
@@ -292,12 +314,12 @@
     }
 
     if (support.formData) {
-      this.formData = function() {
+      this.formData = function () {
         return this.text().then(decode)
       }
     }
 
-    this.json = function() {
+    this.json = function () {
       return this.text().then(JSON.parse)
     }
 
@@ -349,13 +371,13 @@
     this._initBody(body)
   }
 
-  Request.prototype.clone = function() {
+  Request.prototype.clone = function () {
     return new Request(this, { body: this._bodyInit })
   }
 
   function decode(body) {
     var form = new FormData()
-    body.trim().split('&').forEach(function(bytes) {
+    body.trim().split('&').forEach(function (bytes) {
       if (bytes) {
         var split = bytes.split('=')
         var name = split.shift().replace(/\+/g, ' ')
@@ -371,7 +393,7 @@
     // Replace instances of \r\n and \n followed by at least one space or horizontal tab with a space
     // https://tools.ietf.org/html/rfc7230#section-3.2
     var preProcessedHeaders = rawHeaders.replace(/\r?\n[\t ]+/g, ' ')
-    preProcessedHeaders.split(/\r?\n/).forEach(function(line) {
+    preProcessedHeaders.split(/\r?\n/).forEach(function (line) {
       var parts = line.split(':')
       var key = parts.shift().trim()
       if (key) {
@@ -400,7 +422,7 @@
 
   Body.call(Response.prototype)
 
-  Response.prototype.clone = function() {
+  Response.prototype.clone = function () {
     return new Response(this._bodyInit, {
       status: this.status,
       statusText: this.statusText,
@@ -409,32 +431,32 @@
     })
   }
 
-  Response.error = function() {
-    var response = new Response(null, {status: 0, statusText: ''})
+  Response.error = function () {
+    var response = new Response(null, { status: 0, statusText: '' })
     response.type = 'error'
     return response
   }
 
   var redirectStatuses = [301, 302, 303, 307, 308]
 
-  Response.redirect = function(url, status) {
+  Response.redirect = function (url, status) {
     if (redirectStatuses.indexOf(status) === -1) {
       throw new RangeError('Invalid status code')
     }
 
-    return new Response(null, {status: status, headers: {location: url}})
+    return new Response(null, { status: status, headers: { location: url } })
   }
 
   self.Headers = Headers
   self.Request = Request
   self.Response = Response
 
-  self.fetch = function(input, init) {
-    return new Promise(function(resolve, reject) {
+  self.fetch = function (input, init) {
+    return new Promise(function (resolve, reject) {
       var request = new Request(input, init)
       var xhr = new XMLHttpRequest()
 
-      xhr.onload = function() {
+      xhr.onload = function () {
         var options = {
           status: xhr.status,
           statusText: xhr.statusText,
@@ -445,11 +467,11 @@
         resolve(new Response(body, options))
       }
 
-      xhr.onerror = function() {
+      xhr.onerror = function () {
         reject(new TypeError('Network request failed'))
       }
 
-      xhr.ontimeout = function() {
+      xhr.ontimeout = function () {
         reject(new TypeError('Network request failed'))
       }
 
@@ -465,7 +487,7 @@
         xhr.responseType = 'blob'
       }
 
-      request.headers.forEach(function(value, name) {
+      request.headers.forEach(function (value, name) {
         xhr.setRequestHeader(name, value)
       })
 

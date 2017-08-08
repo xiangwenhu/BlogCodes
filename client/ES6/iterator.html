@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+
+
+
+
+    <script>
+        var support = {
+            iterable: 'Symbol' in self && 'iterator' in Symbol,
+        }
+        function iteratorFor(items) {
+            var iterator = {
+                next: function () {
+                    var value = items.shift()
+                    return { done: value === undefined, value: value }
+                }
+            }
+
+            if (!support.iterable) {
+                iterator[Symbol.iterator] = function () {
+                    return iterator
+                }
+            }
+
+            return iterator
+        }
+        var arr = [1, 2, 3, 4]
+
+        var it1 = iteratorFor(arr)
+        console.log(it1.next().value)
+        console.log(it1.next().value)
+
+
+        
+    </script>
+</body>
+
+</html>

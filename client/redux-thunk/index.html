@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+
+<body>
+    <script src="../redux/redux.js"></script>
+    <script>
+        let { createStore, bindActionCreators, applyMiddleware } = self.Redux
+        let reduxThunk = ({ dispatch, getState }) => next => action => {
+            if (typeof action === 'function') {
+                return action(dispatch, getState)
+            }
+            return next(action)
+        }
+
+        let actionCreators = {
+            addAsync: (number) => (dispatch, getState) => {   // 格式是 (参数)=>(dispatch, getState) =>{......}
+                setTimeout(() =>
+                    dispatch({
+                        type: 'add',
+                        payload: number
+                    }), 3000)
+            }
+        }
+
+        let reducer = function (state = 0, action) {
+            switch (action.type) {
+                case 'add':
+                    return state + action.payload
+                default:
+                    return state
+            }
+        }
+
+        let store = createStore(reducer, applyMiddleware(reduxThunk))
+        let boundActions = bindActionCreators(actionCreators, store.dispatch)
+
+        store.subscribe(() => {
+            console.log('state', store.getState())
+        })
+
+        boundActions.addAsync(10)
+    </script>
+
+</body>
+
+</html>

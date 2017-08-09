@@ -5,14 +5,14 @@ fetch(req, {
     headers: {
         'Content-Type': 'application/json'
     }
-}).then(function(res) {
+}).then(function (res) {
 
     console.log(res.headers.keys().next().value)
 
     for (let header of res.headers) {
-        console.log(header);       
+        console.log(header);
     }
     return res.text()
-}).then(function(content) {
+}).then(function (content) {
     console.log('complete');
-})
+}).catch(err => console.log(err))

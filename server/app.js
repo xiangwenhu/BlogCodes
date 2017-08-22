@@ -22,9 +22,9 @@ app.use(async (ctx, next) => {
   try {
     await next()
     if (ctx.status === 404) {
-      ctx.body = {
+      ctx.body = ctx.body || {
         status: false,
-        msg: '404 未找到'
+        msg: '404 未找到' 
       }
     }
   } catch (err) {
@@ -47,6 +47,11 @@ app.use(async function (ctx, next) {
 
 //路由
 routes(app)
+
+app.use(async (ctx,next) =>{
+  console.log('middleware after routes')
+  next()
+})
 
 //异常
 app.on('error', (err, ctx) => {

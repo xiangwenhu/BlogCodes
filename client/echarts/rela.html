@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        html,
+        body {
+            height: 100%;
+            width: 100%;
+            margin: 0
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="main" style="width: 100%;height:100%;"></div>
+
+    <script src="echarts.min.js"></script>
+    <script>
+        var systems = ['XXX用户', '会员中心', 'XXX基础', 'sso']
+
+
+        var myChart = echarts.init(document.getElementById('main'));
+        myChart.showLoading()
+        option = {
+            title: {
+                text: 'Graph 简单示例'
+            },
+            calculable: false,// 是否启用拖拽重计算特性，默认关闭
+            animation: false,// 是否开启动画，默认开启 
+            draggable: false,
+            animationDurationUpdate: 1500,
+            animationEasingUpdate: 'quinticInOut',
+            series: [
+                {
+                    type: 'graph',
+                    layout: 'none',
+                    symbolSize: 50,
+                    roam: true,
+                    draggable: false,
+                    focusNodeAdjacency: false,
+                    label: {
+                        normal: {
+                            show: true,
+                            fontSize: 10
+                        }
+                    },
+                    edgeSymbol: ['circle', 'arrow'],
+                    edgeSymbolSize: [4, 10],
+                    edgeLabel: {
+                        normal: {
+                            textStyle: {
+                                fontSize: 20
+                            }
+                        },
+                        show: false
+                    },
+                    data: [{
+                        name: 'XXX用户\n60',
+                        x: 300,
+                        y: 300,
+                        symbol: 'image://water.png',
+                        symbolSize: 120,
+                        itemStyle: {
+                            normal: {
+                                color: 'blue'
+                            }
+                        },
+                        /* 点focus上的显示内容  */
+                        tooltip: {
+                            formatter: '{b0}',
+                            textStyle: {
+                                fontSize: 20,
+                                color: 'red'
+                            }
+                        },
+                        /* 点内文本 */
+                        label: {
+                            normal: {
+                                show: true,
+                                textStyle: {
+                                    fontSize: '20px',
+                                    color: 'blue'
+                                }
+                            }
+                        }
+
+                    }, {
+                        name: '会员中心',
+                        x: 800,
+                        y: 300,
+                        symbolSize: 120,
+                        itemStyle: {
+                            normal: {
+                                color: 'red'
+                            }
+                        }
+                    }, {
+                        name: 'XXX交易基础',
+                        x: 550,
+                        y: 100,
+                        symbolSize: 120,
+                        itemStyle: {
+                            normal: {
+                                color: 'silver'
+                            }
+                        }
+                    }, {
+                        name: 'SSO',
+                        x: 550,
+                        y: 500,
+                        symbolSize: 120,
+                        itemStyle: {
+                            normal: {
+                                color: 'green'
+                            }
+                        }
+                    }],
+                    // links: [],
+                    links: [
+                        {
+                            source: 0,
+                            target: 1,
+                            symbolSize: [5, 20],
+                            label: {
+                                normal: {
+                                    show: true,
+                                    formatter: function (params) {
+                                        return '成功100\n失败0'
+                                    }
+                                }
+                            },
+                            lineStyle: {
+                                normal: {
+                                    width: 2,
+                                    curveness: 0.2,
+                                    color: 'green'
+                                }
+                            }
+                        }, {
+                            source: 1,
+                            target: 0,
+                            symbolSize: [5, 20],
+                            label: {
+                                normal: {
+                                    show: true,
+                                    formatter: function (params) {
+                                        return '成功100\n失败0'
+                                    }
+                                }
+                            },
+                            lineStyle: {
+                                normal: {
+                                    width: 2,
+                                    curveness: 0.2,
+                                    color: 'green'
+                                }
+                            }
+                        }, {
+                            source: 0,
+                            target: 2,
+                            symbolSize: [5, 20],
+                            label: {
+                                normal: {
+                                    show: true,
+                                    formatter: function (params) {
+                                        return '成功100\n失败0'
+                                    }
+                                }
+                            },
+                            lineStyle: {
+                                normal: {
+                                    width: 5,
+                                    curveness: 0.2,
+                                    color: 'green'
+                                }
+                            }
+                        }, {
+                            source: 2,
+                            target: 0,
+                            symbolSize: [5, 20],
+                            label: {
+                                normal: {
+                                    show: true,
+                                    formatter: function (params) {
+                                        return '成功100\n失败0'
+                                    }
+                                }
+                            },
+                            lineStyle: {
+                                normal: {
+                                    width: 5,
+                                    curveness: 0.2,
+                                    color: 'green'
+                                }
+                            }
+                        }, {
+                            source: 2,
+                            target: 1,
+                            symbolSize: [5, 20],
+                            label: {
+                                normal: {
+                                    show: true,
+                                    formatter: function (params) {
+                                        return '成功100\n失败0'
+                                    }
+                                }
+                            },
+                            lineStyle: {
+                                normal: {
+                                    width: 5,
+                                    curveness: 0.2,
+                                    color: 'green'
+                                }
+                            }
+                        }, {
+                            source: 1,
+                            target: 2,
+                            symbolSize: [5, 20],
+                            label: {
+                                normal: {
+                                    show: true,
+                                    formatter: function (params) {
+                                        return '成功100\n失败0'
+                                    }
+                                }
+                            },
+                            lineStyle: {
+                                normal: {
+                                    width: 5,
+                                    curveness: 0.2,
+                                    color: 'green'
+                                }
+                            }
+                        }, {
+                            source: 1,
+                            target: 3,
+                            symbolSize: [5, 20],
+                            label: {
+                                normal: {
+                                    show: true,
+                                    formatter: function (params) {
+                                        return '成功100\n失败0'
+                                    }
+                                }
+                            },
+                            lineStyle: {
+                                normal: {
+                                    width: 5,
+                                    curveness: 0.2,
+                                    color: 'green'
+                                }
+                            }
+                        }, {
+                            source: 3,
+                            target: 1,
+                            symbolSize: [5, 20],
+                            label: {
+                                normal: {
+                                    show: true,
+                                    formatter: function (params) {
+                                        return '成功100\n失败0'
+                                    }
+                                }
+                            },
+                            lineStyle: {
+                                normal: {
+                                    width: 5,
+                                    curveness: 0.2,
+                                    color: 'green'
+                                }
+                            }
+                        }, {
+                            source: 0,
+                            target: 3,
+                            symbolSize: [5, 20],
+                            label: {
+                                normal: {
+                                    show: true,
+                                    formatter: function (params) {
+                                        return '成功100\n失败0'
+                                    }
+                                }
+                            },
+                            lineStyle: {
+                                normal: {
+                                    width: 5,
+                                    curveness: 0.2,
+                                    color: 'green'
+                                }
+                            }
+                        }, {
+                            source: 3,
+                            target: 0,
+                            symbolSize: [5, 20],
+                            label: {
+                                normal: {
+                                    show: true,
+                                    formatter: function (params) {
+                                        return '成功100\n失败0'
+                                    }
+                                }
+                            },
+                            lineStyle: {
+                                normal: {
+                                    width: 5,
+                                    curveness: 0.2,
+                                    color: 'green'
+                                }
+                            }
+                        }, {
+                            source: 2,
+                            target: 3,
+                            symbolSize: [5, 20],
+                            label: {
+                                normal: {
+                                    show: true,
+                                    formatter: function (params) {
+                                        return '成功100\n失败0'
+                                    }
+                                }
+                            },
+                            lineStyle: {
+                                normal: {
+                                    width: 5,
+                                    curveness: 0.2,
+                                    color: 'green'
+                                }
+                            }
+                        }, {
+                            source: 3,
+                            target: 2,
+                            symbolSize: [5, 20],
+                            label: {
+                                normal: {
+                                    show: true,
+                                    formatter: function (params) {
+                                        return '成功100\n失败1'
+                                    }
+                                }
+                            },
+                            lineStyle: {
+                                normal: {
+                                    width: 5,
+                                    curveness: 0.2,
+                                    color: 'red'
+                                }
+                            }
+                        }],
+                    lineStyle: {
+                        normal: {
+                            opacity: 1,
+                            width: 1,
+                            curveness: 0
+                        }
+                    }
+                }
+            ]
+        };
+
+
+        myChart.setOption(option);
+        setTimeout(() => {
+            myChart.hideLoading()
+        }, 1500)
+        myChart.on('click', function (param) {
+            alert(param)
+        })
+
+
+        window.addEventListener('resize', function () {
+
+            myChart.resize({
+                width: document.documentElement.clientWidth,
+                height: document.documentElement.clientHeight
+            })
+        });
+
+        window.onerror = function (errorMessage, scriptURI, lineNumber, columnNumber, errorObj) {
+            console.log(arguments)
+        }
+
+        
+    </script>
+    <script src="t.js"></script>
+</body>
+
+</html>

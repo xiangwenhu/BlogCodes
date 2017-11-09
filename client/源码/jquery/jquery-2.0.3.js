@@ -2876,7 +2876,7 @@ function createOptions( options ) {
  *
  *	stopOnFalse:	interrupt callings when a callback returns false
  *
- */
+ */	
 jQuery.Callbacks = function( options ) {
 
 	// Convert options from String-formatted to Object-formatted if needed

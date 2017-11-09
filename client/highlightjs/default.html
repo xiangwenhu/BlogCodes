@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="default.min.css" rel="stylesheet">
+</head>
+
+<body>
+    <div>
+        <div style="width:90%" class="code">            
+CREATE TABLE "topic" (
+    "id" serial NOT NULL PRIMARY KEY,
+    "forum_id" integer NOT NULL,
+    "subject" varchar(255) NOT NULL
+); <br>
+INSERT INTO Persons VALUES ('Gates', 'Bill', 'Xuanwumen 10', 'Beijing')<br>
+    </div>
+</body>
+<script src="../源码/jquery/jquery-2.0.3.js"></script>
+<script src="highlight.min.js"></script>
+<script>  
+   hljs.configure({useBR: true});
+    $('div.code').each(function (i, block) {
+        hljs.highlightBlock(block);
+    });
+</script>
+
+</html>

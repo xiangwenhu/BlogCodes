@@ -6101,7 +6101,7 @@ function isHidden( elem, el ) {
 	// isHidden might be called from jQuery#filter function;
 	// in that case, element will be second argument
 	elem = el || elem;
-	return jQuery.css( elem, "display" ) === "none" || !jQuery.contains( elem.ownerDocument, elem ); // 动态创建.
+	return jQuery.css( elem, "display" ) === "none" || !jQuery.contains( elem.ownerDocument, elem );
 }
 
 // NOTE: we've included the "window" in window.getComputedStyle
@@ -6351,7 +6351,7 @@ curCSS = function( elem, name, _computed ) {
 
 	if ( computed ) {
 
-		if ( ret === "" && !jQuery.contains( elem.ownerDocument, elem ) ) { // 针对动态创建的元素
+		if ( ret === "" && !jQuery.contains( elem.ownerDocument, elem ) ) {
 			ret = jQuery.style( elem, name );
 		}
 
@@ -7888,7 +7888,6 @@ var fxNow, timerId,
 					// Adjust and apply
 					start = start / scale;
 					jQuery.style( tween.elem, prop, start + unit );
-				
 
 				// Update scale, tolerating zero or NaN from tween.cur()
 				// And breaking the loop if scale is unchanged or perfect, or if we've just had enough

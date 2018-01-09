@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Micro Templating</title>
+</head>
+
+
+<body>
+
+
+    <script type="text/html">
+        <div id="<%=id%>">
+            <div class="grid_1 alpha right">
+                <img class="righted" src="<%=profile_image_url%>"/>
+            </div>
+            <div class="grid_6 omega contents">
+                <p><b><a href="/<%=from_user%>"><%=from_user%></a>:</b> <%=text%></p>
+            </div>
+        </div>
+    </script>
+
+    <script type="text/html" id="item_tmpl">         
+        <% for ( var i = 0; i < items.length; i++ ) { %>    
+            <% if( i%2 == 0) {%>
+                <li><%=items[i].id%>:<%=items[i].name%></li>
+            <% } %> 
+        <% } %>
+        <% print('数组长度' + items.length ); %>
+        <div style='background:<%=color%>'><%=id%></div>
+   </script>
+   
+   结果：
+    <div id='results'>
+    </div>
+    <br> 顺序执行str：
+    <br>
+    <div id='steps' style="overflow-y:scroll"></div>
+
+
+    <script src="MicroTemplating.js"></script>
+
+    <script>
+        var results = document.getElementById("results");
+        results.innerHTML = tmpl("item_tmpl", {
+            id: '158015777',
+            i: 10,
+            profile_image_url: '',
+            from_user: 'Tom cCom',
+            text: '啊哈哈',
+            color: 'red',
+            items: [
+                {
+                    id: 1,
+                    name: 'Order1'
+                }, {
+                    id: 2,
+                    name: 'Order2'
+                },
+                {
+                    id: 3,
+                    name: 'Order2'
+                }
+            ]
+        });
+        steps.innerHTML = window.arr.map(function (v) {
+            return "<xmp>" +
+
+                // Convert the template into pure JavaScript
+                v.replace(/\r/g, '\\r').replace(/\n/g, '\\n').replace(/\t/g, '\\t')
+                + "</xmp>"
+
+        }).join('')
+
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Micro Templating</title>
+</head>
+
+
+<body>
+   <p>ES6:</p>
+    <script type="text/html" id="item_es6">
+        <div id="${this.id}" class="${this.i % 2 == 1 ? " even" : ""}">
+          <div class="grid_1 alpha right">
+            <img class="righted" src="${this.profile_image_url}"/>
+          </div>
+          <div class="grid_6 omega contents">
+            <p><b><a href="${this.from_user}">${this.from_user}</a>:</b> ${this.text}</p>
+          </div>        
+        </div>
+
+      </script>
+
+    <div id='results1'>
+    </div>
+    <br/>
+
+  
+
+    <script>    
+
+
+        var results = document.getElementById("results1");
+        var template = document.getElementById('item_es6').innerHTML;
+        results.innerHTML = new Function(`return \`${template}\` `).apply({
+            id: '158015777',
+            i: 10,
+            profile_image_url: '',
+            from_user: 'Tom cCom',
+            text: '啊哈哈'
+        })
+
+
+    </script>
+
+</body>
+
+</html>

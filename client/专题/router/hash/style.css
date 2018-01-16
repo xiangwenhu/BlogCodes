@@ -1,0 +1,37 @@
+html,
+body {
+    height: 100%;
+    width: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column
+}
+
+header,
+footer {
+    flex: 0 0 5%;
+    text-align: center;
+}
+
+#main {
+    flex: 1 1 95%;
+    display: flex;
+}
+
+#leftNav {
+    flex: 0 0 20%;
+}
+
+#content {
+    flex: 1 1 80%;
+}
+
+li {
+    list-style: none
+}
+
+li a {
+    text-decoration: none;
+}

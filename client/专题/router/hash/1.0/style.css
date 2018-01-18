@@ -2,6 +2,8 @@ html,
 body {
     height: 100%;
     width: 100%;
+    margin: 0;
+    padding: 0
 }
 
 body {
@@ -13,6 +15,7 @@ header,
 footer {
     flex: 0 0 5%;
     text-align: center;
+    background-color:rosybrown
 }
 
 #main {
@@ -21,11 +24,15 @@ footer {
 }
 
 #leftNav {
-    flex: 0 0 20%;
+    flex: 0 0 200px;
 }
 
 #content {
     flex: 1 1 80%;
+}
+
+#contentZone{
+    flex: 1 1 auto;
 }
 
 li {

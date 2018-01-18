@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Hash Router Demo</title>
+    <link type="text/css" rel='styleSheet' href="style.css">
+</head>
+
+<body>
+
+    <header>Header</header>
+
+    <section id="main">
+        <nav id='leftNav' style="margin-right:20px">
+            <ul>
+                <li>
+                    <li>
+                        <a href="#/m1">菜单1</a>
+                    </li>
+                    <ul>
+                        <li>
+                            <a href="#/m11">菜单11</a>
+                        </li>
+                        <li>
+                            <a href="#/m12">菜单12</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#/m2">菜单2</a>
+                </li>
+                <li>
+                    <a href="#/m3">菜单3</a>
+                </li>
+            </ul>
+        </nav>
+        <section id='contentZone'>
+            <div style="border:solid 1px #333">
+                <p>可变区域内容：</p>
+                <p>这是利用hash实现的前端路由</p>
+                <p>点击菜单就可以切换下面的内容</p>
+            </div>
+
+            <div style="border:solid 1px #123">
+                <div>
+                    可变区域内容
+                </div>
+                <div id='content' style="color:blue">
+
+                </div>
+
+            </div>
+            <div style="margin-top:20px">
+                <input type="button" value="返回" id='back'>
+                <input type="button" value="前进" id='forward'>
+            </div>
+        </section>
+    </section>
+
+    <footer>Footer</footer>
+
+    <script src="Router1.0.js"></script>
+</body>
+
+</html>
